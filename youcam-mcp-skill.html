@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>YouCam API — MCP &amp; Agent Skill for AI Agents</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand:#3385ff; --brand-active:#2e78e9; --brand-weak:rgba(51,133,255,0.05);
+  --text:rgba(9,22,26,0.95); --text-2:rgba(17,24,26,0.65); --text-3:rgba(17,24,26,0.45); --footer:#999;
+  --bg:#ffffff; --fill-weak:rgba(17,24,26,0.02); --fill-weaker:rgba(17,24,26,0.04);
+  --border:rgba(17,24,26,0.1); --border-in:rgba(17,24,26,0.2);
+  --success:#0acc92; --warning:#fec62e;
+  --r-sm:8px; --r-md:16px; --r-lg:20px; --r-pill:9999px;
+  --sh-sm:0 1px 3px rgba(0,0,0,.08); --sh-md:0 4px 16px rgba(0,0,0,.12); --sh-lg:0 8px 32px rgba(0,0,0,.16);
+  --nav-h:64px; --maxw:1200px; --ink:#09161a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:Roboto,ui-sans-serif,system-ui,sans-serif;color:var(--text);background:var(--bg);line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.mono{font-family:'Roboto Mono',ui-monospace,monospace}
+
+/* ---------- NAV (full width) ---------- */
+.nav{position:sticky;top:0;z-index:100;background:#fff}
+.nav::after{content:"";display:block;height:2px;background:linear-gradient(90deg,#3385ff,#7db3ff 40%,rgba(125,179,255,0))}
+.nav-in{height:var(--nav-h);display:flex;align-items:center;gap:32px;padding:0 clamp(20px,4vw,48px)}
+.logo-svg{display:inline-flex;align-items:center}
+.logo-svg svg{height:26px;width:auto;display:block}
+footer .logo-svg svg{height:24px}
+.nav-links{display:flex;align-items:center;gap:26px;margin-left:8px;flex:1}
+.nav-links a{font-size:14px;font-weight:500;color:var(--text);padding:6px 0;position:relative;transition:color .15s}
+.nav-links a:hover{color:var(--brand)}
+.nav-links a.active{color:var(--brand)}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;background:var(--brand);border-radius:2px}
+.nav-links a.has-caret::after{content:"▾";font-size:10px;margin-left:4px;color:var(--text-2)}
+.nav-cta{background:var(--brand);color:#fff;font-weight:500;font-size:14px;padding:10px 22px;border-radius:var(--r-pill);white-space:nowrap;transition:background .15s}
+.nav-cta:hover{background:var(--brand-active)}
+.burger{display:none;background:none;border:none;cursor:pointer;flex-direction:column;gap:5px;padding:6px}
+.burger span{width:22px;height:2px;background:var(--ink);border-radius:2px}
+@media(max-width:960px){
+  .nav-links,.nav-cta{display:none}.burger{display:flex}
+  .nav-links.open{display:flex;position:absolute;top:var(--nav-h);left:0;right:0;background:#fff;flex-direction:column;align-items:flex-start;gap:4px;padding:12px 24px 20px;box-shadow:var(--sh-md);border-top:1px solid var(--border)}
+  .nav-links.open a{width:100%;padding:12px 0;border-bottom:1px solid var(--border)}
+  .nav-links.open a.active::after{display:none}
+  .nav-menu-cta{display:none}
+  .nav-links.open .nav-menu-cta{display:block;background:var(--brand);color:#fff;text-align:center;border:none!important;border-radius:var(--r-pill);padding:13px;margin-top:12px}
+}
+@media(min-width:961px){.nav-menu-cta{display:none}}
+
+/* ---------- BUTTONS ---------- */
+.btn{display:inline-flex;align-items:center;gap:8px;font-weight:500;font-size:16px;border-radius:var(--r-pill);padding:13px 28px;cursor:pointer;transition:.15s;border:1.5px solid transparent;line-height:1}
+.btn-primary{background:var(--brand);color:#fff}
+.btn-primary:hover{background:var(--brand-active);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--brand);border-color:var(--brand)}
+.btn-outline:hover{background:var(--brand-weak)}
+.btn-lg{padding:15px 34px;font-size:17px}
+
+/* ---------- HERO (full screen) ---------- */
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#eef5ff 0%,#f5faff 45%,#ffffff 100%);min-height:calc(100vh - var(--nav-h) - 118px);display:grid;align-items:center}
+.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(51,133,255,.12) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 78%);mask-image:linear-gradient(180deg,#000,transparent 78%);opacity:.5}
+.blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;animation:float 14s ease-in-out infinite}
+.blob.b1{width:360px;height:360px;background:#8fc0ff;top:2%;right:6%}
+.blob.b2{width:280px;height:280px;background:#bfe0ff;bottom:6%;right:26%;animation-delay:-5s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}
+.hero-in{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;padding:32px 0}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);color:var(--brand);font-size:12px;font-weight:700;letter-spacing:.5px;padding:6px 12px;border-radius:var(--r-pill);box-shadow:var(--sh-sm)}
+.eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px rgba(10,204,146,.2)}
+h1.hero-title{font-size:48px;line-height:1.08;font-weight:700;letter-spacing:-1px;margin:18px 0 16px;color:var(--ink)}
+h1.hero-title .grad{background:linear-gradient(90deg,#3385ff,#7a4dff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-sub{font-size:18px;line-height:1.55;color:var(--text-2);max-width:560px}
+.hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0 16px}
+.hero-trust{font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.hero-trust b{color:var(--text-2);font-weight:500}
+.hero-visual{aspect-ratio:4/3;border-radius:var(--r-md);background:linear-gradient(135deg,#e8f1ff,#f5faff);border:1.5px dashed rgba(51,133,255,.4);display:grid;place-items:center;box-shadow:var(--sh-sm)}
+.hero-visual .ph{text-align:center;color:var(--brand)}
+.hero-visual .ph svg{width:46px;height:46px;opacity:.85}
+.hero-visual .ph b{display:block;font-size:14px;font-weight:500;margin-top:8px}
+.hero-visual .ph small{display:block;color:var(--text-3);font-size:12px;margin-top:2px}
+
+/* ---------- MASTER SWITCH ---------- */
+.switch-bar{background:#fff;border-bottom:1px solid var(--border);padding:26px 0 30px;text-align:center;position:sticky;top:var(--nav-h);z-index:90;transition:padding .2s ease}
+.switch-bar.stuck{padding:10px 0;box-shadow:var(--sh-sm)}
+.switch-bar.stuck .switch-lead,.switch-bar.stuck .switch-sub{display:none}
+.switch-lead{font-size:13px;font-weight:700;letter-spacing:2px;color:var(--brand);text-transform:uppercase;margin-bottom:12px}
+.master-seg{display:inline-flex;background:var(--fill-weaker);border:1px solid var(--border);border-radius:var(--r-pill);padding:5px;gap:4px;box-shadow:var(--sh-sm)}
+.master-seg button{border:none;background:none;font-family:inherit;font-size:16px;font-weight:700;color:var(--text-2);padding:12px 34px;border-radius:var(--r-pill);cursor:pointer;transition:.18s;display:flex;align-items:center;gap:9px}
+.master-seg button svg{width:18px;height:18px}
+.master-seg button.active{background:var(--brand);color:#fff;box-shadow:var(--sh-md)}
+.switch-sub{margin-top:12px;font-size:14px;color:var(--text-2)}
+.for-skill{display:none}
+.for-skill.grid{display:none}
+.for-mcp.grid{display:grid}
+.mode-skill .for-mcp{display:none}
+.mode-skill .for-mcp.grid{display:none}
+.mode-skill .for-skill{display:block}
+.mode-skill .for-skill.grid{display:grid}
+
+/* ---------- SECTIONS ---------- */
+section{padding:76px 0;scroll-margin-top:150px}
+.sec-head{text-align:center;max-width:760px;margin:0 auto 44px}
+.kicker{font-size:12px;font-weight:700;letter-spacing:2px;color:var(--brand);text-transform:uppercase}
+h2{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.5px;color:var(--ink);margin:10px 0 12px}
+.sec-head p{font-size:17px;color:var(--text-2)}
+.tint{background:linear-gradient(180deg,#f7faff,#fff)}
+.dark-sec{background:#0e1726;color:#e7edf6}
+.dark-sec h2{color:#fff}.dark-sec .kicker{color:#7db3ff}.dark-sec .sec-head p{color:#9aa7bd}
+
+.grid{display:grid;gap:20px}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:24px;box-shadow:var(--sh-sm);transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--sh-md);border-color:rgba(51,133,255,.4)}
+.card h3{font-size:19px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.card p.desc{font-size:14px;color:var(--text-2)}
+.card .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:12px;color:var(--text-2);border:1px solid var(--border-in);border-radius:var(--r-pill);padding:3px 10px}
+.cap-ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--brand-weak);color:var(--brand);margin-bottom:14px}
+.cap-ico svg{width:24px;height:24px}
+/* card image slot */
+.card-img{aspect-ratio:16/10;border-radius:var(--r-sm);background:linear-gradient(135deg,#eef4ff,#f6f9ff);border:1px dashed rgba(51,133,255,.35);display:grid;place-items:center;color:var(--brand);margin-bottom:16px}
+.card-img svg{width:30px;height:30px;opacity:.8}
+.seg-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--brand);background:var(--brand-weak);border:1px solid rgba(51,133,255,.3);border-radius:var(--r-pill);padding:2px 10px;margin-bottom:10px}
+.mcp-num{font-size:12px;color:var(--text-3);margin-top:10px}
+.apis{font-size:12.5px;color:var(--text-2);margin-top:12px;line-height:1.6}
+.apis b{color:var(--text);font-weight:500}
+.api-label{display:block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--text-2);margin:14px 0 8px}
+
+/* install */
+.install-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start}
+.steps{list-style:none;counter-reset:s}
+.steps li{counter-increment:s;position:relative;padding:0 0 26px 52px}
+.steps li::before{content:counter(s);position:absolute;left:0;top:-2px;width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;font-weight:700;display:grid;place-items:center}
+.steps li:not(:last-child)::after{content:"";position:absolute;left:16px;top:36px;bottom:6px;width:2px;background:var(--border)}
+.steps h4{font-size:17px;font-weight:700;color:var(--ink);margin-bottom:3px}
+.steps p{font-size:14px;color:var(--text-2)}
+.steps code{font-family:'Roboto Mono',monospace;font-size:13px;background:var(--fill-weaker);padding:2px 6px;border-radius:4px;color:var(--brand-active)}
+.code-card{background:#0e1726;border-radius:var(--r-md);box-shadow:var(--sh-lg);overflow:hidden}
+.pick{display:flex;align-items:center;gap:8px;background:#0b1220;padding:12px;flex-wrap:wrap}
+.pick span{color:#6b7a90;font-size:12px;margin-right:2px}
+.pick button{border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.06);color:#cdd7e6;font-family:inherit;font-size:12.5px;padding:6px 13px;border-radius:var(--r-pill);cursor:pointer;transition:.15s}
+.pick button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+.code-tabs{display:flex;gap:2px;background:#0b1220;padding:0 8px}
+.code-tab{border:none;background:none;color:#9aa7bd;font-family:inherit;font-size:13px;font-weight:500;padding:10px 16px;border-radius:8px 8px 0 0;cursor:pointer}
+.code-tab.active{background:#0e1726;color:#fff}
+.code-body{position:relative}
+.code-body pre{margin:0;padding:20px;overflow:auto;font-family:'Roboto Mono',monospace;font-size:13px;line-height:1.65;color:#cdd7e6}
+.code-body .k{color:#ffd479}.code-body .s{color:#59d9a5}.code-body .p{color:#7db3ff}.code-body .m{color:#9aa7bd}
+.code-body .u-url,.code-body .u-skill{color:#59d9a5}.code-body .u-name{color:#ffd479}.code-body .u-cmd{color:#7db3ff}
+.copy{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);color:#cdd7e6;font-size:12px;padding:6px 12px;border-radius:6px;cursor:pointer}
+.copy:hover{background:rgba(255,255,255,.16)}
+.code-pane{display:none}.code-pane.active{display:block}
+.skill-command-list{padding:8px}
+.skill-command{border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.025);overflow:hidden;margin-bottom:8px}
+.skill-command:last-child{margin-bottom:0}
+.skill-command-head{min-height:40px;padding:8px 13px;display:flex;align-items:center;gap:9px}
+.skill-command-step{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:rgba(125,179,255,.16);color:#9fc5ff;font-size:10px;font-weight:700;flex:0 0 auto}
+.skill-command-head b{font-size:12px;font-weight:500;color:#cdd7e6}
+.skill-code-row{min-width:0;display:flex;align-items:center;gap:8px;border-top:1px solid rgba(255,255,255,.08);padding:0 9px 0 0}
+.skill-copy{flex:0 0 auto;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);color:#cdd7e6;font-family:inherit;font-size:11px;padding:5px 10px;border-radius:6px;cursor:pointer;transition:.15s}
+.skill-copy:hover{background:rgba(255,255,255,.14);color:#fff}
+.skill-code-row pre{min-width:0;flex:1;padding:12px 13px!important;font-size:12px!important;line-height:1.55!important;white-space:pre-wrap;overflow-wrap:anywhere}
+
+/* use-case dialog demo */
+.demo-chips{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:26px}
+.demo-chip{border:1px solid var(--border-in);background:#fff;font-family:inherit;font-size:14px;font-weight:500;color:var(--text-2);padding:9px 18px;border-radius:var(--r-pill);cursor:pointer;transition:.15s}
+.demo-chip.active{background:var(--brand);border-color:var(--brand);color:#fff;box-shadow:var(--sh-sm)}
+.demo-chip:hover{border-color:var(--brand);color:var(--brand)}
+.demo-chip.active:hover{color:#fff}
+.demo{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:0;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;box-shadow:var(--sh-md);background:#fff;min-height:620px}
+.chat{display:flex;flex-direction:column;min-width:0;background:#fff}
+.client-fallback{font-size:12px;font-weight:700;color:var(--ink)}
+.chat-scroll{padding:26px 28px 30px;overflow-y:auto;max-height:670px;scroll-behavior:smooth;flex:1}
+.msg{margin-bottom:20px;animation:pop .28s ease both}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.msg.you{display:flex;justify-content:flex-end}
+.user-stack{display:flex;flex-direction:column;align-items:flex-end;gap:8px;max-width:86%}
+.uploads{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.upload-card{width:112px;height:82px;border-radius:12px;border:1px solid rgba(51,133,255,.18);background:linear-gradient(145deg,#f2f7ff,#e4edfb);position:relative;overflow:hidden;display:grid;place-items:center;color:var(--brand);box-shadow:var(--sh-sm)}
+.upload-card svg{width:29px;height:29px;opacity:.85}
+.user-prompt{background:#0e1726;color:#fff;padding:12px 17px;border-radius:16px 16px 4px 16px;font-size:14.5px;line-height:1.52;box-shadow:var(--sh-sm)}
+.msg.bot .who{display:flex;align-items:center;gap:9px;font-weight:500;color:var(--text-2);margin-bottom:10px;font-size:13.5px}
+.msg.bot .who .av{width:28px;height:28px;border-radius:8px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;box-shadow:var(--sh-sm);overflow:hidden}
+.msg.bot .who .av img{width:17px;height:17px}
+.msg.bot p{color:var(--text);font-size:14.5px;line-height:1.68;margin-bottom:10px}
+.msg.bot p:last-of-type{margin-bottom:0}
+.msg.bot ul{margin:10px 0 0 20px;color:var(--text);font-size:14px;line-height:1.65}
+.agent-process{margin:0 0 20px 37px;padding:0;border:0;background:none;font-family:inherit;display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 37px);cursor:pointer;color:var(--text-3);font-size:13px;line-height:1.4;text-align:left;animation:pop .28s ease both;transition:color .15s}
+.agent-process:hover{color:var(--text-2)}
+.agent-process:focus-visible{outline:2px solid rgba(51,133,255,.35);outline-offset:4px;border-radius:4px}
+.process-label{color:inherit;font-size:13px;font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.process-chevron{font-size:19px;line-height:1;color:var(--text-3);transition:transform .2s ease}
+.typing{display:inline-flex;align-items:center;gap:4px;margin:2px 0 20px 37px}
+.typing i{width:6px;height:6px;border-radius:50%;background:var(--text-3);animation:typing 1s ease-in-out infinite}
+.typing i:nth-child(2){animation-delay:.15s}.typing i:nth-child(3){animation-delay:.3s}
+@keyframes typing{0%,60%,100%{transform:none;opacity:.4}30%{transform:translateY(-3px);opacity:1}}
+.acts{display:flex;gap:16px;color:var(--text-3);margin-top:14px}
+.acts svg{width:16px;height:16px;cursor:pointer;transition:color .15s}
+.acts svg:hover{color:var(--brand)}
+.result{background:linear-gradient(160deg,#f8faff,#f3f7ff);border-left:1px solid var(--border);padding:24px;display:flex;flex-direction:column;position:relative}
+.result-head{color:var(--text-2);font-weight:700;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.result-head::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--border-in);transition:.2s}
+.result.ready .result-head::before{background:var(--success);box-shadow:0 0 0 3px rgba(10,204,146,.14)}
+.gallery{flex:1;display:flex;align-items:center;justify-content:center;min-height:430px}
+.result-empty{text-align:center;color:var(--text-3);max-width:210px;animation:pop .3s ease both}
+.result-empty .empty-ico{width:52px;height:52px;margin:0 auto 12px;border-radius:15px;background:#fff;border:1px solid var(--border);display:grid;place-items:center;color:var(--brand);box-shadow:var(--sh-sm)}
+.result-empty svg{width:25px;height:25px}
+.result-empty b{display:block;color:var(--text-2);font-size:13.5px;margin-bottom:4px}
+.result-empty span{font-size:12px;line-height:1.5}
+.result-processing{width:82%;max-width:320px;aspect-ratio:3/4;border-radius:var(--r-md);background:linear-gradient(110deg,#eef3fb 8%,#fff 18%,#eef3fb 33%);background-size:200% 100%;animation:shimmer 1.25s linear infinite;box-shadow:var(--sh-sm);border:1px solid var(--border)}
+@keyframes shimmer{to{background-position-x:-200%}}
+.shot{width:82%;max-width:320px;aspect-ratio:3/4;border-radius:var(--r-md);background:linear-gradient(135deg,#eaf2ff,#f6f9ff);border:1.5px solid rgba(51,133,255,.24);display:flex;align-items:center;justify-content:center;color:var(--brand);position:relative;box-shadow:var(--sh-md);animation:resultIn .45s cubic-bezier(.2,.8,.2,1) both}
+@keyframes resultIn{from{opacity:0;transform:scale(.96) translateY(8px)}to{opacity:1;transform:none}}
+.shot svg{width:40px;height:40px;opacity:.8}
+.shot span{position:absolute;bottom:14px;left:14px;right:14px;text-align:center;font-size:12px;color:var(--text-2);background:rgba(255,255,255,.8);border:1px solid var(--border);border-radius:var(--r-pill);padding:6px 10px;backdrop-filter:blur(6px)}
+
+/* why */
+.why{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.why .card{display:flex;gap:14px}.why .cap-ico{flex:0 0 46px;margin:0}
+
+/* results before/after */
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.ba{position:relative;border-radius:var(--r-md);overflow:hidden;aspect-ratio:4/3;user-select:none;box-shadow:var(--sh-sm);border:1px solid var(--border)}
+.ba .layer{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-weight:700;font-size:15px;letter-spacing:.5px}
+.ba .before{background:linear-gradient(135deg,#5b6b7d,#8394a6)}
+.ba .after{background:linear-gradient(135deg,#3385ff,#7a4dff);clip-path:inset(0 0 0 var(--split,50%))}
+.ba .handle{position:absolute;top:0;bottom:0;left:var(--split,50%);width:2px;background:#fff}
+.ba .handle::after{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;color:var(--brand);width:32px;height:32px;border-radius:50%;display:grid;place-items:center;font-size:14px;box-shadow:var(--sh-md)}
+.ba .lbl{position:absolute;top:10px;font-size:11px;font-weight:700;background:rgba(0,0,0,.35);padding:3px 9px;border-radius:var(--r-pill)}
+.ba .lbl.l{left:10px}.ba .lbl.r{right:10px}
+.res-cap{text-align:center;font-size:13px;color:var(--text-2);margin-top:10px}
+
+/* FAQ */
+.faq{max-width:820px;margin:0 auto}
+.q{border:1px solid var(--border);border-radius:var(--r-md);margin-bottom:12px;background:#fff;overflow:hidden}
+.q-head{width:100%;text-align:left;background:none;border:none;font-family:inherit;font-size:16px;font-weight:500;color:var(--ink);padding:18px 22px;cursor:pointer;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.q-head .pm{color:var(--brand);font-size:22px;transition:transform .3s cubic-bezier(.87,0,.13,1)}
+.q.open .q-head .pm{transform:rotate(45deg)}
+.q-body{max-height:0;overflow:hidden;transition:max-height .3s cubic-bezier(.87,0,.13,1)}
+.q-body p{padding:0 22px 18px;color:var(--text-2);font-size:15px}
+
+/* final CTA */
+.cta-final{position:relative;overflow:hidden;background:linear-gradient(135deg,#3385ff,#1c5fc4);border-radius:var(--r-lg);padding:60px 40px;text-align:center;color:#fff;box-shadow:var(--sh-lg)}
+.cta-final h2{color:#fff}
+.cta-final p{color:rgba(255,255,255,.85);max-width:560px;margin:10px auto 26px;font-size:17px}
+.cta-final .btn-white{background:#fff;color:var(--brand)}
+.cta-final .btn-white:hover{background:#eef5ff}
+.cta-final .btn-ghost{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.5)}
+.cta-note{margin-top:22px;font-size:13px;color:rgba(255,255,255,.75)}
+
+footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
+.foot-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
+.foot-links{display:flex;gap:22px;flex-wrap:wrap}.foot-links a:hover{color:#fff}
+
+.rv{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none}.blob,.typing i,.result-processing{animation:none}
+  .shot{transition:none;animation:none}
+}
+
+@media(max-width:960px){
+  .hero-in{grid-template-columns:1fr;gap:30px;padding:24px 0}
+  h1.hero-title{font-size:38px}
+  .install-wrap{grid-template-columns:1fr;gap:28px}
+  .grid-3,.res-grid{grid-template-columns:1fr 1fr}
+  .switch-bar{position:static}
+}
+@media(max-width:640px){
+  h1.hero-title{font-size:30px}h2{font-size:26px}section{padding:52px 0}
+  .grid-3,.grid-2,.res-grid,.why{grid-template-columns:1fr}
+  .demo{grid-template-columns:1fr}.chat{border-right:none;border-bottom:1px solid var(--border);min-height:auto}
+  .chat-scroll{padding:22px 18px 26px;max-height:620px}
+  .user-stack{max-width:94%}.upload-card{width:96px;height:72px}
+  .agent-process,.typing{margin-left:0}.agent-process{max-width:100%}.result{border-left:0}.gallery{min-height:360px}
+  .master-seg button{padding:11px 22px;font-size:15px}
+  .hero-btns .btn{flex:1;justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="nav-in">
+    <a class="logo-svg" href="#" aria-label="YouCam API"><svg xmlns="http://www.w3.org/2000/svg" width="175" height="24" viewBox="0 0 175 24" fill="none"><path fill="#09161A" fill-opacity=".95" d="M.596.312c.296-.249.734-.36 1.15-.292.4.064.747.291.962.626l6.77 9.147 6.83-9.19c.19-.296.542-.519.937-.583a1.53 1.53 0 0 1 1.168.304c.3.202.51.524.584.905.081.412-.017.845-.266 1.188l-7.72 10.368v9.722c0 .836-.682 1.493-1.494 1.493a1.515 1.515 0 0 1-1.494-1.493v-9.661L.27 2.426C-.194 1.7-.044.761.596.311M45.729 6.958c.853.001 1.522.656 1.522 1.492v8.474c0 3.902-3.25 7.075-7.119 7.075s-7.018-3.173-7.018-7.075V8.45c0-.836.656-1.492 1.493-1.492s1.494.656 1.494 1.492v8.474a4.06 4.06 0 0 0 4.045 4.095c2.292-.03 4.091-1.827 4.091-4.095V8.45c0-.81.686-1.49 1.492-1.492M61.69.011c2.743 0 5.452.922 7.629 2.594a1.6 1.6 0 0 1 .588 1.15c.021.38-.103.741-.348 1.007-.21.296-.55.502-.936.562a1.47 1.47 0 0 1-1.158-.305 9.3 9.3 0 0 0-5.771-1.998l.005.004c-5.118 0-9.279 4.126-9.279 9.044s4.161 8.92 9.279 8.92c2.155 0 4.177-.703 5.693-1.985l.055-.044a1.62 1.62 0 0 1 1.249-.244c.352.081.657.291.86.587.235.24.372.623.35 1.017-.025.45-.248.87-.6 1.128-2.138 1.642-4.843 2.551-7.612 2.551-6.78 0-12.296-5.202-12.296-11.93S54.8.045 61.69.011M96.748 7.021a7.09 7.09 0 0 1 5.569 2.72c1.36-1.706 3.423-2.718 5.581-2.72 3.888.003 7.05 3.163 7.05 7.047v8.473c0 .801-.691 1.458-1.494 1.458s-1.46-.652-1.46-1.458v-8.473c-.055-2.294-1.859-4.095-4.1-4.095s-4.066 1.84-4.066 4.095v8.567c0 .043.001.15-.068.356-.163.489-.567.729-.7.81a1.6 1.6 0 0 1-.756.198l-.227-.017a1.74 1.74 0 0 1-.82-.382l-.082-.085c-.344-.434-.365-.841-.361-1v-8.452c0-2.26-1.825-4.095-4.066-4.095s-4.065 1.84-4.065 4.095v8.474c0 .493-.249.943-.665 1.204-.06.052-.19.138-.348.185-.146.069-.31.068-.387.068h-.25c-.574-.064-1.072-.493-1.265-1.067l-.04-.146V8.48c0-.802.68-1.459 1.46-1.459.782 0 1.405.563 1.486 1.3a7.02 7.02 0 0 1 4.074-1.3"/><path fill="#09161A" fill-opacity=".95" fill-rule="evenodd" d="M23.045 6.987c4.47 0 8.102 3.817 8.102 8.504s-3.633 8.504-8.102 8.504-8.1-3.817-8.1-8.504 3.635-8.503 8.1-8.504m0 2.951c-2.773 0-5.117 2.509-5.117 5.553s2.296 5.524 5.117 5.524c2.82 0 5.118-2.513 5.118-5.524 0-3.01-2.344-5.553-5.118-5.553M85.968 6.987c.838 0 1.495.657 1.495 1.493v14.023c0 .81-.683 1.492-1.495 1.492a1.514 1.514 0 0 1-1.494-1.492v-.45c-1.455 1.255-3.254 1.942-5.117 1.942-4.47 0-8.102-3.817-8.102-8.504s3.637-8.504 8.102-8.504c1.872 0 3.67.678 5.117 1.917V8.48c0-.836.657-1.493 1.494-1.493m-6.607 2.951c-2.82 0-5.117 2.509-5.117 5.553s2.296 5.524 5.117 5.524c2.82 0 5.118-2.462 5.118-5.524s-2.297-5.553-5.118-5.553"/><path fill="#3183FF" fill-rule="evenodd" d="M160.053.043c4.586 0 8.304 3.714 8.304 8.295s-3.718 8.293-8.304 8.293h-5.932v5.429c0 1.047-.85 1.895-1.898 1.895a1.897 1.897 0 0 1-1.898-1.895V2.887a2.846 2.846 0 0 1 2.848-2.844zm-5.932 12.797h5.932a4.505 4.505 0 0 0 4.508-4.502 4.506 4.506 0 0 0-4.508-4.503h-5.932z"/><path fill="#3183FF" d="M173.102.245c1.049 0 1.898.849 1.898 1.896v19.906a1.897 1.897 0 0 1-3.796 0V2.141c0-1.047.85-1.896 1.898-1.896"/><path fill="#3183FF" fill-rule="evenodd" d="M136.311.043a1.9 1.9 0 0 1 1.71 1.07l6.18 12.766.001.002.009.021.003.005 3.311 7.143c.44.95.025 2.076-.926 2.516a1.9 1.9 0 0 1-2.519-.924l-2.801-6.043h-9.934l-2.801 6.043a1.9 1.9 0 0 1-2.52.924 1.895 1.895 0 0 1-.925-2.516l3.311-7.143.002-.005.01-.021.001-.002 6.18-12.766.008-.017.049-.09.007-.012a1.9 1.9 0 0 1 1.644-.951m-3.153 12.765h6.307l-3.154-6.515z"/></svg></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#" class="has-caret">Products</a>
+      <a href="#">Pricing</a>
+      <a href="#">Documentation</a>
+      <a href="#">Playground</a>
+      <a href="#hero" class="active">MCP / Skill</a>
+      <a href="#">Contact Us</a>
+      <a href="#install" class="nav-menu-cta">API Dashboard</a>
+    </nav>
+    <a href="#install" class="nav-cta">API Dashboard</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <span class="blob b1"></span><span class="blob b2"></span>
+  <div class="wrap hero-in">
+    <div>
+      <h1 class="hero-title">Plug YouCam into your agent<br><span class="grad">beauty, fashion &amp; creative AI</span></h1>
+      <p class="hero-sub">Connect YouCam’s beauty, fashion, and creative APIs to Claude Code, Codex, and other LLM coding environments. Add an MCP server for direct tool access, or install an Agent Skill for a ready-made API workflow—all with the same YouCam API key.</p>
+      <div class="hero-btns">
+        <a href="#install" class="btn btn-primary">Get started now →</a>
+        <a href="#" class="btn btn-outline">View documentation</a>
+      </div>
+    </div>
+    <div class="hero-visual" role="img" aria-label="Hero visual placeholder">
+      <div class="ph">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>
+        <b>Hero visual</b><small>add your image here (4:3)</small>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MASTER SWITCH + the two sections it controls (sticky scoped to here) -->
+<div class="switch-scope">
+<div class="switch-bar" id="switchBar">
+  <div class="switch-lead">Two ways to connect</div>
+  <div class="master-seg" id="masterSeg">
+    <button data-mode="mcp" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>MCP</button>
+    <button data-mode="skill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>Agent Skill</button>
+  </div>
+  <p class="switch-sub for-mcp">Connect one or more domain servers to give your agent direct access to YouCam API tools. All three servers use the same API key.</p>
+  <p class="switch-sub for-skill">Install a ready-made workflow. Each skill calls YouCam APIs directly using your API key—no MCP setup required.</p>
+</div>
+
+<!-- CAPABILITIES -->
+<section id="capabilities">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="for-mcp">Three MCPs, one API key</h2>
+      <h2 class="for-skill">Ready-made Agent Skills</h2>
+      <p class="for-mcp">Each MCP server groups YouCam API tools by domain. Connect only the server your agent needs, or add all three using the same API key.</p>
+      <p class="for-skill">Install ready-made skills for common workflows. Each skill calls YouCam APIs directly and requires only your API key—no MCP setup.</p>
+    </div>
+
+    <!-- MCP view -->
+    <div class="for-mcp grid grid-3">
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="seg-tag">Beauty &amp; Personal Care</span>
+        <h3>YouCam for Beauty &amp; Personal Care</h3>
+        <p class="desc">Give your agent tools for cosmetic skin analysis, makeup try-on, facial analysis, hairstyle generation, hair color, and beard editing.</p>
+        <span class="api-label">Categories</span><div class="tags"><span class="tag">Skin, Face &amp; Body</span><span class="tag">Beauty</span><span class="tag">Hair &amp; Beard</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="seg-tag">Fashion &amp; Retail</span>
+        <h3>YouCam for Fashion &amp; Retail</h3>
+        <p class="desc">Give your agent tools to dress models, change backgrounds, and place jewelry or watches on photos for virtual try-on experiences.</p>
+        <span class="api-label">Categories</span><div class="tags"><span class="tag">Fashion</span><span class="tag">Jewelry &amp; Watch</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="seg-tag">Creators</span>
+        <h3>YouCam for Creators</h3>
+        <p class="desc">Give your agent tools to generate, edit, and transform images and videos from prompts or reference media.</p>
+        <span class="api-label">Categories</span><div class="tags"><span class="tag">Image</span><span class="tag">Video</span></div></div>
+    </div>
+
+    <!-- SKILL view -->
+    <div class="for-skill grid grid-3">
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Skin Analysis Expert</h3><p class="desc">Analyzes a selfie across 14 visible skin concerns and turns the API response into a structured, plain-language cosmetic skin report.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Skin Analysis</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Facial Consultant</h3><p class="desc">Analyzes visible facial attributes and color tones, then returns a personalized appearance profile.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Facial Color Tones Analyzer</span><span class="tag">AI Face Attributes</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Beauty Advisor</h3><p class="desc">Analyzes facial attributes and color tones, recommends a matching makeup look, and generates a preview on the provided photo.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes</span><span class="tag">AI Facial Color Tones</span><span class="tag">AI Makeup Try-On</span><span class="tag">AI Look Try-On</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Hair Color &amp; Style Advisor</h3><p class="desc">Analyzes facial attributes and color tones, suggests matching hairstyles and hair colors, and previews each look on the provided photo.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes</span><span class="tag">AI Facial Color Tones</span><span class="tag">AI Hairstyle</span><span class="tag">AI Hair Color</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Hair Diagnostics</h3><p class="desc">Analyzes four visible hair characteristics—density, type, frizziness, and length—and returns one structured report.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Hair Density Detection</span><span class="tag">AI Hair Type Detection</span><span class="tag">AI Hair Frizziness Detection</span><span class="tag">AI Hair Length Detection</span></div></div>
+      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <h3>Clothes Try-on Studio</h3><p class="desc">Dresses a model in the provided outfit, optionally changes the background, and generates a turn, runway walk, or pose motion.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Clothes</span><span class="tag">AI Change Background</span><span class="tag">AI Video Generator</span></div></div>
+    </div>
+    <div class="rv" style="text-align:center;margin-top:38px">
+      <a class="btn btn-outline" href="https://docs.perfectcorp.com" target="_blank" rel="noopener">Learn more in the API docs →</a>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section id="install" class="tint">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2 class="for-mcp">Connect an MCP server</h2>
+      <h2 class="for-skill">Add an Agent Skill</h2>
+      <p class="for-mcp">Choose a domain server, add its configuration to your MCP client, and authenticate with your YouCam API key.</p>
+      <p class="for-skill">Install the complete YouCam skill collection, set your API key, and invoke a workflow from your agent. MCP is not required.</p>
+    </div>
+
+    <div class="install-wrap">
+      <ol class="steps rv">
+        <li><h4 class="for-mcp">Add the connector</h4><h4 class="for-skill">Install the YouCam skills</h4><p class="for-mcp">Paste the selected MCP configuration into your client.</p><p class="for-skill">Run <code>npx skills add youcam</code> to install the complete skill collection.</p></li>
+        <li><h4>Add your API key</h4><p>Get a <code>Bearer</code> key from the API Console, then add it to your MCP configuration or set <code>YOUCAM_API_KEY</code> for Agent Skills.</p></li>
+        <li><h4>Call it from chat</h4><p class="for-mcp">Ask in plain English; your agent selects the right tool and returns structured results.</p><p class="for-skill">Invoke a skill; it calls the required APIs and returns a formatted report with result media.</p></li>
+      </ol>
+
+      <!-- MCP install -->
+      <div class="for-mcp code-card rv">
+        <div class="pick" id="mcpPick"><span>MCP&nbsp;server</span><button class="active" data-mcp="beauty">Beauty &amp; Personal Care</button><button data-mcp="fashion">Fashion &amp; Retail</button><button data-mcp="creators">Creators</button></div>
+        <div class="code-tabs"><button class="code-tab active" data-pane="m1">Claude Desktop</button><button class="code-tab" data-pane="m2">Cursor / VS Code</button></div>
+        <div class="code-body">
+          <button class="copy" data-copy>Copy</button>
+          <div class="code-pane active" id="m1"><pre><span class="p">{</span>
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"</span><span class="u-name">youcam-beauty</span><span class="k">"</span>: {
+      <span class="k">"command"</span>: <span class="s">"npx"</span>,
+      <span class="k">"args"</span>: [<span class="s">"-y"</span>, <span class="s">"mcp-remote"</span>,
+        <span class="s">"</span><span class="u-url">https://mcp-api-01.makeupar.com/mcp/beauty</span><span class="s">"</span>,
+        <span class="s">"--header"</span>, <span class="s">"Authorization:${AUTH}"</span>],
+      <span class="k">"env"</span>: { <span class="k">"AUTH"</span>: <span class="s">"Bearer YOUR_API_KEY"</span> }
+    }
+  }
+<span class="p">}</span></pre></div>
+          <div class="code-pane" id="m2"><pre><span class="p">{</span>
+  <span class="k">"mcpServers"</span>: {
+    <span class="k">"</span><span class="u-name">youcam-beauty</span><span class="k">"</span>: {
+      <span class="k">"url"</span>: <span class="s">"</span><span class="u-url">https://mcp-api-01.makeupar.com/mcp/beauty</span><span class="s">"</span>,
+      <span class="k">"type"</span>: <span class="s">"http"</span>,
+      <span class="k">"headers"</span>: { <span class="k">"Authorization"</span>: <span class="s">"Bearer YOUR_API_KEY"</span> }
+    }
+  }
+<span class="p">}</span></pre></div>
+        </div>
+      </div>
+
+      <!-- SKILL install (one command installs ALL skills) -->
+      <div class="for-skill code-card rv">
+        <div class="code-body">
+          <div class="skill-command-list">
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">1</span><b>Install the YouCam skill collection</b></div>
+              <div class="skill-code-row"><pre><code><span class="s">npx</span> skills add youcam</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">2</span><b>Set your API key</b></div>
+              <div class="skill-code-row"><pre><code><span class="s">export</span> YOUCAM_API_KEY=<span class="s">"YOUR_API_KEY"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">3</span><b>Invoke a skill in chat</b></div>
+              <div class="skill-code-row"><pre><code><span class="p">/youcam:skin-analysis-expert</span> <span class="s">"analyze this selfie"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="p">/youcam:clothes-tryon</span> <span class="s">"try this dress on the model photo"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES — dialog demo (inside switch scope) -->
+<section id="usecases">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>One prompt in, a real result out</h2>
+    </div>
+    <div class="demo-chips rv" id="demoChips"></div>
+    <div class="demo rv">
+      <div class="chat">
+        <div class="chat-scroll" id="chatScroll"><div id="chatBody"></div></div>
+      </div>
+      <div class="result" id="resultPanel">
+        <div class="result-head">Result</div>
+        <div class="gallery" id="rgallery"></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div><!-- /switch-scope -->
+
+<!-- WHY -->
+<section id="advantage" class="tint">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>YouCam AI capabilities, now available to your agent</h2><p>Bring YouCam’s specialized beauty, fashion, and creative APIs into MCP and reusable Agent Skill workflows.</p></div>
+    <div class="why">
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.2L18 20l-6-3.2L6 20l1.5-6.9L3 8.9 9 8z"/></svg></div><div><h3>Purpose-built beauty AI</h3><p class="desc">Specialized APIs for cosmetic skin analysis, virtual try-on, facial attributes, hair, fashion, and creative generation.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><h3>Structured outputs</h3><p class="desc">Receive structured data, task status, and result URLs your agent can use in the next step of a workflow.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/></svg></div><div><h3>Built for agent workflows</h3><p class="desc">MCP servers expose discoverable tools, while Agent Skills package common multi-step API workflows into reusable instructions.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></div><div><h3>One key, every capability</h3><p class="desc">A single API key unlocks all three MCP servers and every Agent Skill—no per-feature integration.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section id="results" class="dark-sec">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>See what your agent can create</h2><p>Drag to compare before and after. (Swap in real YouCam outputs when ready.)</p></div>
+    <div class="res-grid">
+      <div class="rv"><div class="ba" data-ba><div class="layer before">INPUT</div><div class="layer after">MAKEUP VTO</div><div class="lbl l">Before</div><div class="lbl r">After</div><div class="handle"></div></div><p class="res-cap">Beauty · makeup virtual try-on</p></div>
+      <div class="rv"><div class="ba" data-ba><div class="layer before">INPUT</div><div class="layer after" style="background:linear-gradient(135deg,#0acc92,#3385ff)">SKIN REPORT</div><div class="lbl l">Selfie</div><div class="lbl r">Scores</div><div class="handle"></div></div><p class="res-cap">Skin Analysis · structured JSON</p></div>
+      <div class="rv"><div class="ba" data-ba><div class="layer before">PHOTO</div><div class="layer after" style="background:linear-gradient(135deg,#7a4dff,#3385ff)">ON MODEL</div><div class="lbl l">Product</div><div class="lbl r">Try-on</div><div class="handle"></div></div><p class="res-cap">Fashion · clothes try-on</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>FAQ</h2></div>
+    <div class="faq">
+      <div class="q"><button class="q-head">Do I need an API key?<span class="pm">+</span></button><div class="q-body"><p>Yes. The same YouCam API key works across all three MCP servers and every YouCam Agent Skill. Create a key in the YouCam API Console, then add it to your MCP configuration or set it as the <code>YOUCAM_API_KEY</code> environment variable.</p></div></div>
+      <div class="q"><button class="q-head">What's the difference between MCP and Agent Skill?<span class="pm">+</span></button><div class="q-body"><p>A YouCam MCP server gives your agent direct access to individual YouCam API tools grouped by domain. An Agent Skill is a ready-made workflow: it selects and calls the required YouCam APIs, then formats the result for the user. Agent Skills call the APIs directly and do not require an MCP server. Both use the same YouCam API key.</p></div></div>
+      <div class="q"><button class="q-head">Do Agent Skills require an MCP server?<span class="pm">+</span></button><div class="q-body"><p>No. YouCam Agent Skills call the YouCam APIs directly using your API key. You only need to install the skill collection and set the <code>YOUCAM_API_KEY</code> environment variable.</p></div></div>
+      <div class="q"><button class="q-head">Which agents &amp; clients are supported?<span class="pm">+</span></button><div class="q-body"><p>MCP servers work with clients that support remote HTTP MCP servers and custom authorization headers. Agent Skills are designed for skill-compatible LLM coding environments. See the setup documentation for the current compatibility list.</p></div></div>
+      <div class="q"><button class="q-head">How is it billed?<span class="pm">+</span></button><div class="q-body"><p>MCP and Agent Skill usage is billed through your existing YouCam API plan. There is no separate charge for the MCP or Skill layer; usage is counted according to the underlying YouCam API calls. Start on the free trial and scale up.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="get-started">
+  <div class="wrap">
+    <div class="cta-final rv">
+      <h2>Connect YouCam to your agent today</h2>
+      <p>Connect YouCam and make your first API call in minutes.</p>
+      <div class="hero-btns" style="justify-content:center;margin:0">
+        <a href="#" class="btn btn-lg btn-white">Get started now →</a>
+        <a href="#" class="btn btn-lg btn-ghost">View documentation</a>
+      </div>
+      <p class="cta-note">One API key · Usage-based pricing · MCP and Agent Skill support</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap foot-in">
+    <a class="logo-svg" href="#" aria-label="YouCam API"><svg xmlns="http://www.w3.org/2000/svg" width="176" height="25" viewBox="0 0 176 25" fill="none"><path fill="#fff" d="M45.844 6.985c.855 0 1.526.66 1.526 1.498v8.505c0 3.916-3.26 7.101-7.137 7.101s-7.037-3.185-7.037-7.101V8.483c0-.84.659-1.498 1.498-1.498.84 0 1.498.659 1.498 1.498v8.505a4.073 4.073 0 0 0 4.054 4.11c2.298-.031 4.102-1.834 4.102-4.11V8.483c0-.813.687-1.497 1.495-1.498M.597.313C.894.063 1.334-.05 1.752.02c.4.065.748.293.964.629l6.787 9.18L16.35.607c.19-.297.543-.521.939-.586.409-.065.84.047 1.17.306.302.202.512.525.586.908.081.413-.017.848-.267 1.192L11.04 12.833v9.757a1.5 1.5 0 0 1-1.498 1.498 1.52 1.52 0 0 1-1.498-1.498v-9.696L.27 2.435C-.194 1.708-.044.765.597.313M61.845.012c2.75 0 5.465.925 7.647 2.604.353.292.568.71.59 1.154.021.383-.104.744-.349 1.01-.21.298-.55.505-.938.565a1.47 1.47 0 0 1-1.162-.306 9.33 9.33 0 0 0-5.785-2.005l.004.004c-5.13 0-9.3 4.14-9.3 9.077 0 4.936 4.17 8.952 9.3 8.952 2.16 0 4.188-.706 5.707-1.992l.057-.043a1.62 1.62 0 0 1 1.252-.245c.353.081.659.291.861.588.237.241.374.625.353 1.02-.026.453-.25.875-.603 1.133-2.143 1.648-4.855 2.56-7.63 2.56-6.797 0-12.328-5.22-12.328-11.973S54.937.047 61.844.012M96.99 7.048a7.1 7.1 0 0 1 5.582 2.729c1.364-1.712 3.432-2.727 5.596-2.729a7.08 7.08 0 0 1 7.067 7.072v8.504c0 .805-.693 1.463-1.498 1.463a1.464 1.464 0 0 1-1.463-1.463V14.12c-.056-2.303-1.864-4.11-4.11-4.11s-4.076 1.846-4.076 4.11v8.6c0 .042-.001.15-.07.357-.163.49-.567.731-.701.813a1.6 1.6 0 0 1-.758.197l-.227-.016a1.75 1.75 0 0 1-.822-.383l-.082-.087c-.344-.434-.366-.842-.362-1.002v-8.483c0-2.269-1.83-4.11-4.076-4.11-2.247 0-4.076 1.846-4.076 4.11v8.505c0 .494-.25.946-.667 1.209-.06.051-.19.138-.349.185-.146.069-.309.068-.386.068h-.25c-.577-.064-1.076-.494-1.27-1.07l-.04-.147V8.51c.001-.804.682-1.463 1.465-1.463s1.407.564 1.489 1.304a7.03 7.03 0 0 1 4.084-1.304"/><path fill="#fff" fill-rule="evenodd" d="M23.103 7.014c4.48 0 8.122 3.831 8.122 8.535s-3.641 8.534-8.122 8.534-8.12-3.83-8.12-8.534 3.644-8.535 8.12-8.535m0 2.961c-2.78 0-5.13 2.518-5.13 5.574s2.303 5.543 5.13 5.543 5.131-2.521 5.131-5.543c0-3.021-2.35-5.574-5.13-5.574M86.183 7.014c.84 0 1.498.659 1.498 1.498v14.074c0 .814-.684 1.497-1.498 1.497a1.52 1.52 0 0 1-1.498-1.497v-.452c-1.459 1.261-3.262 1.95-5.13 1.95-4.48 0-8.122-3.83-8.122-8.535 0-4.704 3.646-8.535 8.122-8.535 1.877 0 3.68.68 5.13 1.924v-.426c0-.84.66-1.498 1.498-1.498M79.56 9.975c-2.827 0-5.13 2.518-5.13 5.574s2.303 5.543 5.13 5.543 5.13-2.47 5.13-5.543-2.302-5.574-5.13-5.574"/><path fill="#3183FF" fill-rule="evenodd" d="M160.451.045a8.326 8.326 0 1 1 0 16.649h-5.946v5.448a1.903 1.903 0 0 1-3.806 0V2.9a2.855 2.855 0 0 1 2.855-2.854zm-5.946 12.843h5.946a4.52 4.52 0 1 0 0-9.038h-5.946z"/><path fill="#3183FF" d="M173.533.248c1.051 0 1.904.851 1.904 1.902v19.98a1.904 1.904 0 0 1-3.806 0V2.15c0-1.05.852-1.902 1.902-1.902"/><path fill="#3183FF" fill-rule="evenodd" d="M136.652.045c.729 0 1.395.417 1.712 1.074l6.196 12.812.011.024.002.005 3.32 7.168a1.904 1.904 0 0 1-3.454 1.598l-2.808-6.064h-9.959l-2.808 6.064a1.903 1.903 0 0 1-3.454-1.598l3.32-7.168.002-.005.009-.022.001-.002 6.196-12.812.009-.018.048-.09.007-.012a1.9 1.9 0 0 1 1.65-.954m-3.163 12.811h6.324l-3.161-6.538z"/></svg></a>
+    <div class="foot-links"><a href="#">Products</a><a href="#">Pricing</a><a href="#">Documentation</a><a href="#">Playground</a><a href="#hero">MCP / Skill</a><a href="#">Contact Us</a></div>
+    <span>© 2026 Perfect Corp · YouCam API</span>
+  </div>
+</footer>
+
+<script>
+// mobile nav
+const burger=document.getElementById('burger'),links=document.getElementById('navLinks');
+burger.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
+
+// MASTER SWITCH: MCP <-> Agent Skill drives capabilities + install
+document.querySelectorAll('#masterSeg button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('#masterSeg button').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  document.body.classList.toggle('mode-skill', b.dataset.mode==='skill');
+  buildDemo(b.dataset.mode);
+}));
+
+// switch-bar collapses to tabs-only once it sticks under the nav
+const switchBar=document.getElementById('switchBar');
+function onScroll(){ if(switchBar) switchBar.classList.toggle('stuck', switchBar.getBoundingClientRect().top<=65); }
+window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+// install code tabs (MCP view)
+document.querySelectorAll('.code-tab').forEach(t=>t.addEventListener('click',()=>{
+  const card=t.closest('.code-card');
+  card.querySelectorAll('.code-tab').forEach(x=>x.classList.remove('active'));
+  card.querySelectorAll('.code-pane').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');card.querySelector('#'+t.dataset.pane).classList.add('active');
+}));
+
+// MCP picker -> swap url + server name
+const MCP_BASE='https://mcp-api-01.makeupar.com/mcp/';
+document.querySelectorAll('#mcpPick button').forEach(b=>b.addEventListener('click',()=>{
+  const m=b.dataset.mcp;
+  document.querySelectorAll('#mcpPick button').forEach(x=>x.classList.remove('active'));b.classList.add('active');
+  document.querySelectorAll('#install .for-mcp .u-url').forEach(e=>e.textContent=MCP_BASE+m);
+  document.querySelectorAll('#install .for-mcp .u-name').forEach(e=>e.textContent='youcam-'+m);
+}));
+
+// copy
+async function copyText(text,btn){
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(text);
+    }else{
+      const area=document.createElement('textarea');
+      area.value=text;area.style.position='fixed';area.style.opacity='0';
+      document.body.appendChild(area);area.select();document.execCommand('copy');area.remove();
+    }
+    btn.textContent='Copied ✓';setTimeout(()=>btn.textContent='Copy',1400);
+  }catch(err){
+    btn.textContent='Try again';setTimeout(()=>btn.textContent='Copy',1400);
+  }
+}
+document.querySelectorAll('[data-copy]').forEach(btn=>btn.addEventListener('click',()=>{
+  const pane=btn.closest('.code-card').querySelector('.code-pane.active pre')||btn.closest('.code-card').querySelector('.code-pane pre');
+  copyText(pane.innerText,btn);
+}));
+document.querySelectorAll('[data-copy-command]').forEach(btn=>btn.addEventListener('click',()=>{
+  copyText(btn.closest('.skill-code-row').querySelector('pre').innerText,btn);
+}));
+
+// FAQ
+document.querySelectorAll('.q-head').forEach(h=>h.addEventListener('click',()=>{
+  const q=h.parentElement,body=q.querySelector('.q-body'),open=q.classList.contains('open');
+  document.querySelectorAll('.q').forEach(x=>{x.classList.remove('open');x.querySelector('.q-body').style.maxHeight=null});
+  if(!open){q.classList.add('open');body.style.maxHeight=body.scrollHeight+'px'}
+}));
+
+// before/after sliders
+document.querySelectorAll('[data-ba]').forEach(ba=>{
+  let drag=false;
+  const set=x=>{const r=ba.getBoundingClientRect();let p=(x-r.left)/r.width*100;p=Math.max(4,Math.min(96,p));ba.style.setProperty('--split',p+'%')};
+  const down=e=>{drag=true;set((e.touches?e.touches[0]:e).clientX)};
+  const move=e=>{if(drag)set((e.touches?e.touches[0]:e).clientX)};
+  ba.addEventListener('mousedown',down);window.addEventListener('mousemove',move);window.addEventListener('mouseup',()=>drag=false);
+  ba.addEventListener('touchstart',down,{passive:true});window.addEventListener('touchmove',move,{passive:true});window.addEventListener('touchend',()=>drag=false);
+  ba.style.setProperty('--split','50%');
+});
+
+// USE-CASE dialog demo — richer conversation, follows the MCP / Agent Skill switch
+const SCENES={
+  mcp:[
+    {chip:"Beauty brand",you:"Create a personalized lipstick preview for this shopper using our soft coral shade.",uploads:[{name:"shopper-selfie.jpg",kind:"portrait"},{name:"soft-coral.png",kind:"product"}],intro:"I’ll prepare a customer-facing virtual try-on while preserving the shopper’s identity and the product shade.",thought:"Validate the shopper photo and shade reference, then route the request to the beauty MCP’s makeup try-on tool.",toolName:"AI Makeup Try-On",toolDetail:"youcam-beauty · use case: beauty consultation · shade: soft coral",answer:"<p>The personalized lipstick preview is ready for the beauty consultation flow.</p><ul><li>Product shade matched to the supplied reference</li><li>Application limited to the lips</li><li>Original skin tone, facial features, and lighting preserved</li></ul><p>The output can now be returned inside the brand’s shopping assistant or consultation experience.</p>",shot:"Beauty consultation · lipstick preview"},
+    {chip:"Skincare retail",you:"Analyze this shopper selfie and return cosmetic concern scores for product discovery.",uploads:[{name:"shopper-selfie.jpg",kind:"portrait"}],intro:"I’ll generate structured cosmetic skin signals that a retail assistant can use to personalize product discovery.",thought:"Check selfie quality and face visibility, then call the beauty MCP for concern scores and visual mappings.",toolName:"AI Skin Analysis",toolDetail:"youcam-beauty · use case: skincare retail · output: scores + maps",answer:"<p>The selfie is suitable for a cosmetic skincare discovery flow. The strongest visible focus areas are texture, pores, and dark circles.</p><ul><li>Structured concern scores are available for ranking</li><li>Visual maps can be shown in the shopper experience</li><li>The result can be passed to the retailer’s own recommendation logic</li></ul><p>This provides the analysis layer without prescribing medical treatment.</p>",shot:"Skincare retail · concern map"},
+    {chip:"Fashion e-commerce",you:"Generate a shoppable try-on of this dress on our model photo.",uploads:[{name:"model.jpg",kind:"portrait"},{name:"dress-front.png",kind:"garment"}],intro:"I’ll create a product-detail-page try-on that keeps the model recognizable and the garment faithful to the catalog image.",thought:"Assign model and garment inputs, isolate the apparel item, and use the fashion MCP with pose preservation.",toolName:"AI Clothes Try-On",toolDetail:"youcam-fashion · use case: fashion PDP · inputs: model + garment",answer:"<p>The shoppable fashion preview is ready for the product page.</p><ul><li>Garment color and pattern preserved</li><li>Fit adapted to the model’s original pose</li><li>Model identity and background retained</li></ul><p>The generated asset can be displayed beside the original catalog photography.</p>",shot:"Fashion e-commerce · PDP try-on"},
+    {chip:"Jewelry retail",you:"Place this watch on the shopper’s wrist for an online product preview.",uploads:[{name:"wrist-photo.jpg",kind:"wrist"},{name:"watch-product.png",kind:"product"}],intro:"I’ll create an on-wrist product visualization with the scale and perspective matched to the shopper photo.",thought:"Detect the wrist position, estimate perspective, and submit the shopper and product images to the fashion MCP.",toolName:"AI Watch Try-On",toolDetail:"youcam-fashion · use case: jewelry retail · match: scale + angle",answer:"<p>The on-wrist preview has been generated for the retail experience.</p><ul><li>Watch face and product design preserved</li><li>Band aligned to the detected wrist</li><li>Perspective and lighting matched to the source photo</li></ul><p>The result is ready to embed in a conversational shopping or product-detail flow.</p>",shot:"Jewelry retail · on-wrist preview"},
+    {chip:"Brand marketing",you:"Create three campaign directions from this product packshot.",uploads:[{name:"hero-product.png",kind:"product"}],intro:"I’ll turn the approved packshot into a consistent set of campaign concepts without losing the product identity.",thought:"Use the product as a high-strength reference, define a shared art direction, and request three marketing compositions.",toolName:"AI Image Generator",toolDetail:"youcam-creators · use case: brand campaign · outputs: 3",answer:"<p>Three campaign directions are ready for the marketing team.</p><ul><li>Clean studio hero for web and commerce</li><li>Lifestyle editorial composition for campaign pages</li><li>Close-up social crop for paid media</li></ul><p>Each direction keeps the supplied product visually consistent across the set.</p>",shot:"Brand marketing · campaign concept"},
+    {chip:"Creative agency",you:"Turn this approved key visual into a five-second social promo.",uploads:[{name:"approved-key-visual.jpg",kind:"product"}],intro:"I’ll add controlled motion to the approved visual and prepare a short-form asset suitable for a client campaign.",thought:"Inspect the approved composition, choose subtle camera movement, and call the creators MCP for a five-second clip.",toolName:"AI Video Generator",toolDetail:"youcam-creators · use case: agency production · duration: 5s",answer:"<p>The five-second social promo is ready for agency review.</p><ul><li>Approved subject and composition preserved</li><li>Subtle push-in and lighting motion added</li><li>Duration optimized for short-form placement</li></ul><p>The resulting clip can move directly into the team’s review and delivery workflow.</p>",shot:"Creative agency · social promo"}
+  ],
+  skill:[
+    {chip:"Skin Analysis Expert",you:"Analyze my skin and summarize the main visible concerns.",uploads:[{name:"my-selfie.jpg",kind:"portrait"}],intro:"I’ll run the Skin Analysis Expert workflow and turn the API scores into a readable cosmetic skin report.",thought:"Validate the selfie, request the supported concern scores, then organize the strongest visible signals into a concise summary.",toolName:"Skin Analysis Expert",toolDetail:"youcam skill · AI Skin Analysis · formatted report",answer:"<p>Your report highlights texture, pores, and dark circles as the most visible focus areas in this image.</p><ul><li>Texture appears moderately uneven</li><li>Pores are most visible around the T-zone</li><li>Dark circles are visible beneath both eyes</li></ul><p>This is a cosmetic image assessment, not a medical diagnosis. The full report and visual map are ready on the right.</p>",shot:"Cosmetic skin report"},
+    {chip:"Facial Consultant",you:"What are my color tones and visible facial attributes?",uploads:[{name:"portrait.jpg",kind:"portrait"}],intro:"I’ll combine color-tone and facial-attribute analysis into a single appearance profile.",thought:"Check portrait quality, analyze visible color tones and facial attributes, then merge both responses into one profile.",toolName:"Facial Consultant",toolDetail:"youcam skill · Color Tones + Face Attributes",answer:"<p>The analysis indicates a warm-leaning undertone and an oval face shape with balanced visible proportions.</p><ul><li>Undertone: warm</li><li>Face shape: oval</li><li>Overall contrast: medium</li></ul><p>The complete appearance profile is available on the right.</p>",shot:"Facial appearance profile"},
+    {chip:"Beauty Advisor",you:"Recommend and preview a makeup look for me.",uploads:[{name:"my-photo.jpg",kind:"portrait"}],intro:"I’ll analyze the visible facial attributes and color tones, recommend a coordinated look, and generate a preview.",thought:"Combine face-shape and color-tone results, choose a balanced everyday palette, then call the makeup preview APIs.",toolName:"Beauty Advisor",toolDetail:"youcam skill · 4 API workflow · preview enabled",answer:"<p>I selected a warm everyday look designed to complement the visible color tones and facial proportions.</p><ul><li>Eyes: soft bronze definition</li><li>Cheeks: warm peach blush</li><li>Lips: muted coral satin</li></ul><p>I also generated the complete look on the supplied photo; the preview is ready on the right.</p>",shot:"Warm everyday makeup look"},
+    {chip:"Hair Advisor",you:"What hairstyle and color would suit me?",uploads:[{name:"hair-photo.jpg",kind:"portrait"}],intro:"I’ll analyze the visible facial attributes and color tones, then generate a hairstyle and color preview.",thought:"Use the portrait analysis to select complementary shape and color options, then preview the strongest combination.",toolName:"Hair Color & Style Advisor",toolDetail:"youcam skill · Hairstyle + Hair Color preview",answer:"<p>Two styles are a strong match for the visible face shape: a softly layered shoulder-length cut and a longer face-framing style.</p><ul><li>Recommended color: soft copper brown</li><li>Alternative: warm chestnut</li><li>Preview: layered style with soft copper tone</li></ul><p>The recommended combination is shown on the right.</p>",shot:"Hair style and color preview"},
+    {chip:"Hair Diagnostics",you:"Analyze the visible characteristics of my hair.",uploads:[{name:"hair-closeup.jpg",kind:"portrait"}],intro:"I’ll assess the visible density, type, frizziness, and length, then combine them into one structured hair profile.",thought:"Check whether the hair is sufficiently visible, run four attribute detections, and merge the outputs into one report.",toolName:"Hair Diagnostics",toolDetail:"youcam skill · 4 hair attribute APIs",answer:"<p>The image provides enough visibility for a complete hair-characteristics profile.</p><ul><li>Visible density: medium</li><li>Hair type: wavy</li><li>Visible frizziness: low</li><li>Length: shoulder length</li></ul><p>The structured result is an appearance assessment rather than a medical diagnosis.</p>",shot:"Hair characteristics report"},
+    {chip:"Clothes Try-on Studio",you:"Try this outfit with a runway walk.",uploads:[{name:"model.jpg",kind:"portrait"},{name:"outfit.png",kind:"garment"}],intro:"I’ll apply the outfit to the model first, then use the completed try-on as the reference for a short runway motion.",thought:"Validate both images, generate the clothing try-on, and pass the approved frame into the video workflow.",toolName:"Clothes Try-on Studio",toolDetail:"youcam skill · Clothes + Background + Video",answer:"<p>I completed the outfit try-on and used the result to generate a five-second runway-style clip.</p><ul><li>Garment details preserved</li><li>Model identity retained</li><li>Motion: forward walk with a subtle turn</li></ul><p>The finished runway preview is ready on the right.</p>",shot:"▶ Runway try-on video"}
+  ]
+};
+const chatBody=document.getElementById('chatBody'),chatScroll=document.getElementById('chatScroll'),gallery=document.getElementById('rgallery'),demoChips=document.getElementById('demoChips'),resultPanel=document.getElementById('resultPanel');
+const CLIENTS=[
+  {name:"Claude",icon:"https://cdn.simpleicons.org/claude/D97757",fallback:"CL"},
+  {name:"Cursor",icon:"https://cdn.simpleicons.org/cursor/111827",fallback:"CU"},
+  {name:"VS Code Copilot",icon:"https://cdn.simpleicons.org/visualstudiocode/007ACC",fallback:"VS"}
+];
+let demoMode='mcp',clientIndex=0,clientTimer,sceneTimers=[],sceneRun=0;
+const SHOT_ICON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>';
+const UPLOAD_ICONS={
+  portrait:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20c.7-4 3-6 6.5-6s5.8 2 6.5 6"/></svg>',
+  garment:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 4l4 2 4-2 4 4-3 3v9H7v-9L4 8z"/></svg>',
+  wrist:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="7" y="6" width="10" height="12" rx="3"/><path d="M9 6V3h6v3M9 18v3h6v-3"/><circle cx="12" cy="12" r="2.5"/></svg>',
+  product:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7l8-4 8 4-8 4z"/><path d="M4 7v10l8 4 8-4V7M12 11v10"/></svg>'
+};
+const ACTS='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>'+
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 8.5a4 4 0 0 1 0 7"/></svg>'+
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M7 10v10H4V10zM7 10l4-7a2 2 0 0 1 3 2l-1 5h5a2 2 0 0 1 2 2.5l-1.4 5A2 2 0 0 1 15.6 20H7"/></svg>'+
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="transform:rotate(180deg)"><path d="M7 10v10H4V10zM7 10l4-7a2 2 0 0 1 3 2l-1 5h5a2 2 0 0 1 2 2.5l-1.4 5A2 2 0 0 1 15.6 20H7"/></svg>'+
+  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/></svg>';
+function iconMarkup(c){
+  return '<img src="'+c.icon+'" alt="" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span class="client-fallback" hidden>'+c.fallback+'</span>';
+}
+function startClientRotation(){
+  clearInterval(clientTimer);
+  clientTimer=setInterval(()=>setClient((clientIndex+1)%CLIENTS.length),2600);
+}
+function setClient(i){
+  clientIndex=i;
+  document.querySelectorAll('[data-agent-name]').forEach(x=>x.textContent=CLIENTS[i].name);
+  document.querySelectorAll('[data-agent-avatar]').forEach(x=>x.innerHTML=iconMarkup(CLIENTS[i]));
+}
+function agentWho(){
+  const c=CLIENTS[clientIndex];
+  return '<div class="who"><span class="av" data-agent-avatar>'+iconMarkup(c)+'</span><span data-agent-name>'+c.name+'</span></div>';
+}
+function uploadMarkup(files){
+  if(!files||!files.length)return '';
+  return '<div class="uploads">'+files.map(f=>'<div class="upload-card" role="img" aria-label="Uploaded '+f.kind+' image">'+(UPLOAD_ICONS[f.kind]||SHOT_ICON)+'</div>').join('')+'</div>';
+}
+function scrollChat(){requestAnimationFrame(()=>{chatScroll.scrollTop=chatScroll.scrollHeight})}
+function schedule(run,fn,delay){sceneTimers.push(setTimeout(()=>{if(run===sceneRun){fn();scrollChat()}},delay))}
+function resetScene(){
+  sceneTimers.forEach(clearTimeout);sceneTimers=[];sceneRun++;
+  resultPanel.classList.remove('ready');
+  gallery.innerHTML='<div class="result-empty"><div class="empty-ico">'+SHOT_ICON+'</div><b>Waiting for the agent</b><span>The generated result will appear after the tool finishes.</span></div>';
+}
+function renderScene(i){
+  const s=SCENES[demoMode][i];
+  resetScene();
+  const run=sceneRun;
+  chatBody.innerHTML='<div class="msg you"><div class="user-stack">'+uploadMarkup(s.uploads)+'<div class="user-prompt">'+s.you+'</div></div></div>';
+  demoChips.querySelectorAll('.demo-chip').forEach((x,ix)=>x.classList.toggle('active',ix===i));
+  const fast=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const t=fast?[0,0,0,0,0]:[380,920,1750,2350,3100];
+  schedule(run,()=>{
+    chatBody.insertAdjacentHTML('beforeend','<div class="msg bot">'+agentWho()+'<p>'+s.intro+'</p></div><button class="agent-process" id="process-'+run+'" type="button"><span class="process-label" data-process-label>Preparing '+s.toolName+'</span><span class="process-chevron">›</span></button>');
+  },t[0]);
+  schedule(run,()=>{
+    const process=document.getElementById('process-'+run);
+    if(process)process.querySelector('[data-process-label]').textContent='Using '+s.toolName;
+  },t[1]);
+  schedule(run,()=>{
+    const process=document.getElementById('process-'+run);
+    if(process)process.querySelector('[data-process-label]').textContent='Used '+s.toolName;
+    chatBody.insertAdjacentHTML('beforeend','<div class="typing" id="typing-'+run+'" aria-label="Agent is responding"><i></i><i></i><i></i></div>');
+  },t[2]);
+  schedule(run,()=>{
+    const typing=document.getElementById('typing-'+run);if(typing)typing.remove();
+    chatBody.insertAdjacentHTML('beforeend','<div class="msg bot">'+s.answer+'<div class="acts">'+ACTS+'</div></div>');
+    gallery.innerHTML='<div class="result-processing" aria-label="Generating result"></div>';
+  },t[3]);
+  schedule(run,()=>{
+    resultPanel.classList.add('ready');
+    gallery.innerHTML='<div class="shot">'+SHOT_ICON+'<span>'+s.shot+'</span></div>';
+  },t[4]);
+}
+function buildDemo(mode){
+  demoMode=mode;
+  demoChips.innerHTML=SCENES[mode].map((s,i)=>'<button class="demo-chip'+(i?'':' active')+'" data-i="'+i+'">'+s.chip+'</button>').join('');
+  demoChips.querySelectorAll('.demo-chip').forEach(c=>c.addEventListener('click',()=>renderScene(+c.dataset.i)));
+  renderScene(0);
+}
+startClientRotation();
+buildDemo('mcp');
+
+// scroll reveal
+const io=new IntersectionObserver((es)=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
