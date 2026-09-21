@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex" />
-<title>YouCam API — MCP &amp; Agent Skill for AI Agents</title>
+<title>YouCam API — MCP, CLI &amp; Agent Skills for AI Agents</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -62,13 +62,14 @@ footer .logo-svg svg{height:24px}
 .btn-lg{padding:15px 34px;font-size:17px}
 
 /* ---------- HERO (full screen) ---------- */
-.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#eef5ff 0%,#f5faff 45%,#ffffff 100%);min-height:calc(100vh - var(--nav-h) - 118px);display:grid;align-items:center}
-.hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(51,133,255,.12) 1px,transparent 1px);background-size:26px 26px;-webkit-mask-image:linear-gradient(180deg,#000,transparent 78%);mask-image:linear-gradient(180deg,#000,transparent 78%);opacity:.5}
+.hero{position:relative;isolation:isolate;overflow:hidden;background:#eef5ff;min-height:calc(100vh - var(--nav-h) - 118px);display:grid;align-items:center}
+.hero::before{content:"";position:absolute;z-index:-1;inset:0;background:linear-gradient(90deg,rgba(245,250,255,.96) 0%,rgba(245,250,255,.82) 38%,rgba(245,250,255,.25) 67%,rgba(245,250,255,.04) 100%)}
+.hero-bg{position:absolute;z-index:-2;inset:0;width:100%;height:100%;display:block;object-fit:cover;object-position:center}
 .blob{position:absolute;border-radius:50%;filter:blur(60px);opacity:.45;animation:float 14s ease-in-out infinite}
 .blob.b1{width:360px;height:360px;background:#8fc0ff;top:2%;right:6%}
 .blob.b2{width:280px;height:280px;background:#bfe0ff;bottom:6%;right:26%;animation-delay:-5s}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-24px)}}
-.hero-in{position:relative;display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;padding:32px 0}
+.hero-in{position:relative;width:100%;display:grid;grid-template-columns:minmax(0,600px);justify-content:start;align-items:center;padding:32px 24px}
 .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--border);color:var(--brand);font-size:12px;font-weight:700;letter-spacing:.5px;padding:6px 12px;border-radius:var(--r-pill);box-shadow:var(--sh-sm)}
 .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--success);box-shadow:0 0 0 3px rgba(10,204,146,.2)}
 h1.hero-title{font-size:48px;line-height:1.08;font-weight:700;letter-spacing:-1px;margin:18px 0 16px;color:var(--ink)}
@@ -77,11 +78,6 @@ h1.hero-title .grad{background:linear-gradient(90deg,#3385ff,#7a4dff);-webkit-ba
 .hero-btns{display:flex;gap:14px;flex-wrap:wrap;margin:28px 0 16px}
 .hero-trust{font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .hero-trust b{color:var(--text-2);font-weight:500}
-.hero-visual{aspect-ratio:4/3;border-radius:var(--r-md);background:linear-gradient(135deg,#e8f1ff,#f5faff);border:1.5px dashed rgba(51,133,255,.4);display:grid;place-items:center;box-shadow:var(--sh-sm)}
-.hero-visual .ph{text-align:center;color:var(--brand)}
-.hero-visual .ph svg{width:46px;height:46px;opacity:.85}
-.hero-visual .ph b{display:block;font-size:14px;font-weight:500;margin-top:8px}
-.hero-visual .ph small{display:block;color:var(--text-3);font-size:12px;margin-top:2px}
 
 /* ---------- MASTER SWITCH ---------- */
 .switch-bar{background:#fff;border-bottom:1px solid var(--border);padding:26px 0 30px;text-align:center;position:sticky;top:var(--nav-h);z-index:90;transition:padding .2s ease}
@@ -94,12 +90,20 @@ h1.hero-title .grad{background:linear-gradient(90deg,#3385ff,#7a4dff);-webkit-ba
 .master-seg button.active{background:var(--brand);color:#fff;box-shadow:var(--sh-md)}
 .switch-sub{margin-top:12px;font-size:14px;color:var(--text-2)}
 .for-skill{display:none}
+.for-cli{display:none}
 .for-skill.grid{display:none}
+.for-cli.grid{display:none}
 .for-mcp.grid{display:grid}
 .mode-skill .for-mcp{display:none}
 .mode-skill .for-mcp.grid{display:none}
 .mode-skill .for-skill{display:block}
+.mode-skill .for-skill.btn{display:inline-flex}
 .mode-skill .for-skill.grid{display:grid}
+.mode-cli .for-mcp{display:none}
+.mode-cli .for-mcp.grid{display:none}
+.mode-cli .for-cli{display:block}
+.mode-cli .for-cli.btn{display:inline-flex}
+.mode-cli .for-cli.grid{display:grid}
 
 /* ---------- SECTIONS ---------- */
 section{padding:76px 0;scroll-margin-top:150px}
@@ -123,13 +127,20 @@ h2{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.5px;color:va
 .cap-ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--brand-weak);color:var(--brand);margin-bottom:14px}
 .cap-ico svg{width:24px;height:24px}
 /* card image slot */
-.card-img{aspect-ratio:16/10;border-radius:var(--r-sm);background:linear-gradient(135deg,#eef4ff,#f6f9ff);border:1px dashed rgba(51,133,255,.35);display:grid;place-items:center;color:var(--brand);margin-bottom:16px}
-.card-img svg{width:30px;height:30px;opacity:.8}
+.card-img{aspect-ratio:16/10;border-radius:var(--r-sm);background:#eef4ff;border:1px solid var(--border);overflow:hidden;margin-bottom:16px}
+.card-img img{width:100%;height:100%;display:block;object-fit:cover}
 .seg-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.4px;color:var(--brand);background:var(--brand-weak);border:1px solid rgba(51,133,255,.3);border-radius:var(--r-pill);padding:2px 10px;margin-bottom:10px}
 .mcp-num{font-size:12px;color:var(--text-3);margin-top:10px}
 .apis{font-size:12.5px;color:var(--text-2);margin-top:12px;line-height:1.6}
 .apis b{color:var(--text);font-weight:500}
 .api-label{display:block;font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--text-2);margin:14px 0 8px}
+
+/* CLI API categories */
+.cli-category-grid{display:none}
+.mode-cli .cli-category-grid{display:grid}
+.cli-category-card{display:flex;flex-direction:column}
+.cli-mockup{display:grid;place-items:center;background:#eef0f3;border-color:#e1e4e8}
+.cli-mockup span{color:#949ba5;font-size:12px;font-weight:700;letter-spacing:1.6px}
 
 /* install */
 .install-wrap{display:grid;grid-template-columns:1fr 1.15fr;gap:40px;align-items:start}
@@ -148,7 +159,7 @@ h2{font-size:34px;line-height:1.15;font-weight:700;letter-spacing:-.5px;color:va
 .pick button{border:1px solid var(--border);background:#fff;color:var(--text-2);font-family:inherit;font-size:12.5px;padding:7px 13px;border-radius:var(--r-pill);cursor:pointer;transition:.15s}
 .pick button:hover{border-color:var(--brand);color:var(--brand-active)}
 .pick button.active{background:var(--brand);border-color:var(--brand);color:#fff}
-.client-note{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid rgba(51,131,255,.25);border-radius:var(--r-sm);background:var(--brand-weak);color:var(--text-2);font-size:13px}
+.client-note{display:flex;align-items:center;gap:8px;margin:12px 0 0;padding:10px 12px;border:1px solid rgba(51,131,255,.25);border-radius:var(--r-sm);background:var(--brand-weak);color:var(--text-2);font-size:13px}
 .client-note[hidden]{display:none}
 .client-note svg{width:17px;height:17px;flex:0 0 auto;color:var(--brand)}
 .code-tabs{display:flex;gap:2px;background:#0b1220;padding:0 8px;overflow-x:auto}
@@ -273,15 +284,23 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
   .install-wrap{grid-template-columns:1fr;gap:28px}
   .grid-3,.res-grid{grid-template-columns:1fr 1fr}
   .switch-bar{position:static}
+  .cli-stage{min-height:auto}
+  .cli-stage:not(:last-child){border-right:0;border-bottom:1px solid rgba(255,255,255,.09)}
 }
 @media(max-width:640px){
   h1.hero-title{font-size:30px}h2{font-size:26px}section{padding:52px 0}
+  .hero{min-height:auto;background:linear-gradient(160deg,#eef5ff 0%,#f5faff 60%,#fff 100%)}
+  .hero::before{background:linear-gradient(180deg,rgba(245,250,255,.25),rgba(245,250,255,.75))}
+  .hero-bg{display:none}
+  .hero-in{min-height:540px;padding:54px 24px 64px}
   .grid-3,.grid-2,.res-grid,.why{grid-template-columns:1fr}
   .demo{grid-template-columns:1fr}.chat{border-right:none;border-bottom:1px solid var(--border);min-height:auto}
   .chat-scroll{padding:22px 18px 26px;max-height:620px}
   .user-stack{max-width:94%}.upload-card{width:96px;height:72px}
   .agent-process,.typing{margin-left:0}.agent-process{max-width:100%}.result{border-left:0}.gallery{min-height:360px}
-  .master-seg button{padding:11px 22px;font-size:15px}
+  .master-seg{display:flex;width:calc(100% - 32px);margin:0 auto}
+  .master-seg button{flex:1;justify-content:center;padding:11px 7px;font-size:13px;gap:4px;white-space:nowrap}
+  .master-seg button svg{width:16px;height:16px}
   .hero-btns .btn{flex:1;justify-content:center}
 }
 </style>
@@ -297,7 +316,7 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
       <a href="#">Pricing</a>
       <a href="#">Documentation</a>
       <a href="#">Playground</a>
-      <a href="#hero" class="active">MCP / Skill</a>
+      <a href="#hero" class="active">MCP / CLI / Skill</a>
       <a href="#">Contact Us</a>
       <a href="#install" class="nav-menu-cta">API Dashboard</a>
     </nav>
@@ -308,20 +327,16 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 
 <!-- HERO -->
 <section class="hero" id="hero">
-  <span class="blob b1"></span><span class="blob b2"></span>
+  <video class="hero-bg" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
+    <source src="assets/hero-visual.mp4" type="video/mp4">
+  </video>
   <div class="wrap hero-in">
     <div>
-      <h1 class="hero-title"><span class="grad">MCP servers &amp; Agent Skills</span><br>for visual AI</h1>
-      <p class="hero-sub">Connect YouCam’s beauty, fashion, image, and video APIs through MCP—or install reusable Agent Skills for complete visual AI workflows. One YouCam API key, from prompt to real output.</p>
+      <h1 class="hero-title"><span class="grad">MCP, CLI &amp; Agent Skills</span><br>for Visual AI</h1>
+      <p class="hero-sub">Connect YouCam's beauty, fashion, image, and video APIs through MCP, run them from the YouCam CLI, or install reusable Agent Skills for complete visual AI workflows. One API key, from prompt or command to real output.</p>
       <div class="hero-btns">
-        <a href="#install" class="btn btn-primary">Get started now →</a>
-        <a href="#" class="btn btn-outline">View documentation</a>
-      </div>
-    </div>
-    <div class="hero-visual" role="img" aria-label="Hero visual placeholder">
-      <div class="ph">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg>
-        <b>Hero visual</b><small>add your image here (4:3)</small>
+        <a href="https://yce.perfectcorp.com/api-console/en/" class="btn btn-primary">Get started now</a>
+        <a href="https://docs.perfectcorp.com/develop/mcp" class="btn btn-outline">View documentation</a>
       </div>
     </div>
   </div>
@@ -330,38 +345,50 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <!-- MASTER SWITCH + the two sections it controls (sticky scoped to here) -->
 <div class="switch-scope">
 <div class="switch-bar" id="switchBar">
-  <div class="switch-lead">Two ways to connect</div>
+  <div class="switch-lead">Three ways to connect</div>
   <div class="master-seg" id="masterSeg">
     <button data-mode="mcp" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>MCP</button>
+    <button data-mode="cli"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 7 5 5-5 5M13 17h6"/></svg>CLI</button>
     <button data-mode="skill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>Agent Skill</button>
   </div>
-  <p class="switch-sub for-mcp">Connect one or more domain servers to give your agent direct access to YouCam API tools. All three servers use the same API key.</p>
-  <p class="switch-sub for-skill">Install a ready-made workflow. Each skill calls YouCam APIs directly using your API key—no MCP setup required.</p>
 </div>
 
 <!-- CAPABILITIES -->
 <section id="capabilities">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2 class="for-mcp">Three MCPs, one API key</h2>
-      <h2 class="for-skill">Ready-made Agent Skills</h2>
-      <p class="for-mcp">Each MCP server groups YouCam API tools by domain. Connect only the server your agent needs, or add all three using the same API key.</p>
-      <p class="for-skill">Install ready-made skills for common workflows. Each skill calls YouCam APIs directly and requires only your API key—no MCP setup.</p>
+      <h2 class="for-mcp">YouCam MCP: Direct Visual AI Tools for Agents</h2>
+      <h2 class="for-cli">YouCam CLI: Composable Commands for Every Workflow</h2>
+      <h2 class="for-skill">YouCam Agent Skills: Complete Workflows, Ready to Install</h2>
+      <p class="for-mcp">Three domain MCP servers expose individual YouCam API tools directly to compatible agents. Connect the domains you need—or all three—with one API key.</p>
+      <p class="for-cli">One CLI maps YouCam API features to predictable commands for task creation, status checks, templates, and costs—ready for developers, scripts, and command-running agents.</p>
+      <p class="for-skill">Ready-made Agent Skills package API selection, sequencing, and result formatting into reusable workflows. Install a complete job instead of assembling each API call yourself.</p>
+    </div>
+
+    <!-- CLI view: YouCam API categories exposed through one command-line interface -->
+    <div class="for-cli grid grid-3 cli-category-grid">
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Skin, Face and Body image placeholder"><span>MOCKUP</span></div><h3>Skin, Face &amp; Body</h3><p class="desc">Analyze visible skin and facial attributes, or transform face and body appearance through specialized YouCam APIs.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Beauty image placeholder"><span>MOCKUP</span></div><h3>Beauty</h3><p class="desc">Apply makeup looks, transfer nail designs, and build beauty try-on experiences from source and reference media.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Fashion image placeholder"><span>MOCKUP</span></div><h3>Fashion</h3><p class="desc">Dress models in garments and generate product-ready virtual try-on results for retail workflows.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Jewelry and Watches image placeholder"><span>MOCKUP</span></div><h3>Jewelry &amp; Watches</h3><p class="desc">Place necklaces, earrings, rings, bracelets, and watches onto shopper photos with virtual try-on.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Hair and Beard image placeholder"><span>MOCKUP</span></div><h3>Hair &amp; Beard</h3><p class="desc">Analyze hair characteristics and preview hairstyles, colors, and beard edits.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Image API image placeholder"><span>MOCKUP</span></div><h3>Image</h3><p class="desc">Generate, edit, enhance, reshape, and replace backgrounds in still-image workflows.</p></div>
+      <div class="card cli-category-card rv"><div class="card-img cli-mockup" aria-label="Video API image placeholder"><span>MOCKUP</span></div><h3>Video</h3><p class="desc">Generate and transform video assets from prompts, images, and approved visual references.</p></div>
     </div>
 
     <!-- MCP view -->
     <div class="for-mcp grid grid-3">
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+      <div class="card rv"><div class="card-img"><img src="assets/mcp-beauty.png" alt="YouCam for Beauty and Personal Care" loading="lazy" decoding="async"></div>
         <span class="seg-tag">Beauty &amp; Personal Care</span>
         <h3>YouCam for Beauty &amp; Personal Care</h3>
         <p class="desc">Give your agent tools for cosmetic skin analysis, makeup try-on, facial analysis, hairstyle generation, hair color, and beard editing.</p>
         <span class="api-label">Categories</span><div class="tags"><span class="tag">Skin, Face &amp; Body</span><span class="tag">Beauty</span><span class="tag">Hair &amp; Beard</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+      <div class="card rv"><div class="card-img"><img src="assets/mcp-fashion.png" alt="YouCam for Fashion and Retail" loading="lazy" decoding="async"></div>
         <span class="seg-tag">Fashion &amp; Retail</span>
         <h3>YouCam for Fashion &amp; Retail</h3>
         <p class="desc">Give your agent tools to dress models, change backgrounds, and place jewelry or watches on photos for virtual try-on experiences.</p>
-        <span class="api-label">Categories</span><div class="tags"><span class="tag">Fashion</span><span class="tag">Jewelry &amp; Watch</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="api-label">Categories</span><div class="tags"><span class="tag">Fashion</span><span class="tag">Jewelry &amp; Watches</span></div></div>
+      <div class="card rv"><div class="card-img"><img src="assets/mcp-creators.png" alt="YouCam for Creators" loading="lazy" decoding="async"></div>
         <span class="seg-tag">Creators</span>
         <h3>YouCam for Creators</h3>
         <p class="desc">Give your agent tools to generate, edit, and transform images and videos from prompts or reference media.</p>
@@ -370,27 +397,29 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 
     <!-- SKILL view -->
     <div class="for-skill grid grid-3">
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-skin-analysis.jpg" alt="Skin Analysis Expert workflow" loading="lazy" decoding="async"></div>
         <h3>Skin Analysis Expert</h3><p class="desc">Analyzes a selfie across 14 visible skin concerns and turns the API response into a structured, plain-language cosmetic skin report.</p>
         <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Skin Analysis</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-facial-consultant.jpg" alt="Facial Consultant workflow" loading="lazy" decoding="async"></div>
         <h3>Facial Consultant</h3><p class="desc">Analyzes visible facial attributes and color tones, then returns a personalized appearance profile.</p>
-        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Facial Color Tones Analyzer</span><span class="tag">AI Face Attributes</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Facial Color Tones Analyzer</span><span class="tag">AI Face Attributes &amp; Ratio Analyzer</span></div></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-beauty-advisor.jpg" alt="Beauty Advisor workflow" loading="lazy" decoding="async"></div>
         <h3>Beauty Advisor</h3><p class="desc">Analyzes facial attributes and color tones, recommends a matching makeup look, and generates a preview on the provided photo.</p>
-        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes</span><span class="tag">AI Facial Color Tones</span><span class="tag">AI Makeup Try-On</span><span class="tag">AI Look Try-On</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes &amp; Ratio Analyzer</span><span class="tag">AI Facial Color Tones Analyzer</span><span class="tag">AI Makeup Virtual Try-On</span><span class="tag">AI Look Virtual Try-On</span></div></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-hair-color-style.jpg" alt="Hair Color and Style Advisor workflow" loading="lazy" decoding="async"></div>
         <h3>Hair Color &amp; Style Advisor</h3><p class="desc">Analyzes facial attributes and color tones, suggests matching hairstyles and hair colors, and previews each look on the provided photo.</p>
-        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes</span><span class="tag">AI Facial Color Tones</span><span class="tag">AI Hairstyle</span><span class="tag">AI Hair Color</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Face Attributes &amp; Ratio Analyzer</span><span class="tag">AI Facial Color Tones Analyzer</span><span class="tag">AI Hair Style Virtual Try-On</span><span class="tag">AI Hair Color Virtual Try-On</span></div></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-hair-diagnostics.jpg" alt="Hair Diagnostics workflow" loading="lazy" decoding="async"></div>
         <h3>Hair Diagnostics</h3><p class="desc">Analyzes four visible hair characteristics—density, type, frizziness, and length—and returns one structured report.</p>
         <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Hair Density Detection</span><span class="tag">AI Hair Type Detection</span><span class="tag">AI Hair Frizziness Detection</span><span class="tag">AI Hair Length Detection</span></div></div>
-      <div class="card rv"><div class="card-img"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg></div>
-        <h3>Clothes Try-on Studio</h3><p class="desc">Dresses a model in the provided outfit, optionally changes the background, and generates a turn, runway walk, or pose motion.</p>
-        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Clothes</span><span class="tag">AI Change Background</span><span class="tag">AI Video Generator</span></div></div>
+      <div class="card rv"><div class="card-img"><img src="assets/skill-clothes-tryon-studio.png" alt="Clothes Try-On Studio workflow" loading="lazy" decoding="async"></div>
+        <h3>Clothes Try-On Studio</h3><p class="desc">Dresses a model in the provided outfit, optionally changes the background, and generates a turn, runway walk, or pose motion.</p>
+        <span class="api-label">Included APIs</span><div class="tags"><span class="tag">AI Clothes Virtual Try-On</span><span class="tag">AI Photo Background Change</span><span class="tag">AI Video Generator</span></div></div>
     </div>
     <div class="rv" style="text-align:center;margin-top:38px">
-      <a class="btn btn-outline" href="https://docs.perfectcorp.com" target="_blank" rel="noopener">Learn more in the API docs →</a>
+      <a class="btn btn-outline for-mcp" href="https://docs.perfectcorp.com/develop/mcp" target="_blank" rel="noopener">Learn more in the API docs</a>
+      <a class="btn btn-outline for-cli" href="https://docs.perfectcorp.com/develop/introduction" target="_blank" rel="noopener">Learn more in the API docs</a>
+      <a class="btn btn-outline for-skill" href="https://docs.perfectcorp.com/develop/agent_skills" target="_blank" rel="noopener">Learn more in the API docs</a>
     </div>
   </div>
 </section>
@@ -399,25 +428,26 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <section id="install" class="tint">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2 class="for-mcp">Connect an MCP server</h2>
+      <h2 class="for-mcp">Connect an MCP Server</h2>
+      <h2 class="for-cli">Install the YouCam CLI</h2>
       <h2 class="for-skill">Add an Agent Skill</h2>
       <p class="for-mcp">Choose a domain server, add its configuration to your MCP client, and authenticate with your YouCam API key.</p>
+      <p class="for-cli">Install one command-line tool, authenticate with your YouCam API key, and run visual AI features from a terminal or agent workflow.</p>
       <p class="for-skill">Install the complete YouCam skill collection, set your API key, and invoke a workflow from your agent. MCP is not required.</p>
     </div>
 
     <div class="install-wrap">
       <ol class="steps rv">
-        <li><h4 class="for-mcp">Add the connector</h4><h4 class="for-skill">Install the YouCam skills</h4><p class="for-mcp">Paste the selected MCP configuration into your client.</p><p class="for-skill">Run <code>npx skills add youcam</code> to install the complete skill collection.</p></li>
-        <li><h4>Add your API key</h4><p>Get a <code>Bearer</code> key from the API Console, then add it to your MCP configuration or set <code>YOUCAM_API_KEY</code> for Agent Skills.</p><a class="step-link" href="https://yce.makeupar.com/api-console/en/api-keys/" target="_blank" rel="noopener">Open API Console →</a></li>
-        <li><h4>Call it from chat</h4><p class="for-mcp">Ask in plain English; your agent selects the right tool and returns structured results.</p><p class="for-skill">Invoke a skill; it calls the required APIs and returns a formatted report with result media.</p></li>
+        <li><h4 class="for-mcp">Add the connector</h4><h4 class="for-cli">Install the CLI</h4><h4 class="for-skill">Install the YouCam skills</h4><p class="for-mcp">Paste the selected MCP configuration into your client.</p><p class="for-cli">Install <code>youcam-cli</code> globally with npm, then verify the <code>youcam</code> command.</p><p class="for-skill">Run <code>npx skills add YouCam-API/skills</code> to install the complete skill collection.</p></li>
+        <li><h4>Add your API key</h4><p class="for-mcp">Get a <code>Bearer</code> key from the API Console and add it to your MCP configuration.</p><p class="for-cli">Authenticate once with <code>youcam auth login</code>. The CLI uses the saved key for subsequent requests.</p><p class="for-skill">Get a <code>Bearer</code> key and set <code>YOUCAM_API_KEY</code> in your environment.</p><a class="step-link" href="https://yce.perfectcorp.com/api-console/en/api-keys/" target="_blank" rel="noopener">GET FREE API KEY →</a></li>
+        <li><h4 class="for-mcp">Call it from chat</h4><h4 class="for-cli">Run a command</h4><h4 class="for-skill">Invoke a skill</h4><p class="for-mcp">Ask in plain English; your agent selects the right tool and returns structured results.</p><p class="for-cli">Create a task with <code>youcam run</code>, then retrieve its result with <code>youcam status</code>.</p><p class="for-skill">Invoke a skill; it calls the required APIs and returns a formatted report with result media.</p></li>
       </ol>
 
       <!-- MCP install -->
       <div class="for-mcp install-config rv">
-        <div class="pick" id="mcpPick"><button class="active" data-mcp="beauty">Beauty &amp; Personal Care</button><button data-mcp="fashion">Fashion &amp; Retail</button><button data-mcp="creators">Creators</button></div>
-        <div class="client-note" id="claudeRequirement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Requires Node.js and npm.</span></div>
+        <div class="pick" id="mcpPick"><button class="active" data-mcp="beauty">YouCam for Beauty &amp; Skin Care</button><button data-mcp="fashion">YouCam for Fashion &amp; Retail</button><button data-mcp="creators">YouCam for Creators</button></div>
         <div class="code-card">
-          <div class="code-tabs"><button class="code-tab active" data-pane="m1">Claude Desktop</button><button class="code-tab" data-pane="m2">Cursor</button><button class="code-tab" data-pane="m3">Copilot in VS Code</button></div>
+          <div class="code-tabs"><button class="code-tab active" data-pane="m1">Claude Desktop</button></div>
           <div class="code-body">
             <button class="copy" data-copy>Copy</button>
             <div class="code-pane active" id="m1"><pre><span class="p">{</span>
@@ -431,24 +461,29 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
     }
   }
 <span class="p">}</span></pre></div>
-          <div class="code-pane" id="m2"><pre><span class="p">{</span>
-  <span class="k">"mcpServers"</span>: {
-    <span class="k">"</span><span class="u-name">youcam-beauty</span><span class="k">"</span>: {
-      <span class="k">"url"</span>: <span class="s">"</span><span class="u-url">https://mcp-api-01.makeupar.com/mcp/beauty</span><span class="s">"</span>,
-      <span class="k">"type"</span>: <span class="s">"http"</span>,
-      <span class="k">"headers"</span>: { <span class="k">"Authorization"</span>: <span class="s">"Bearer YOUR_API_KEY"</span> }
-    }
-  }
-<span class="p">}</span></pre></div>
-          <div class="code-pane" id="m3"><pre><span class="p">{</span>
-  <span class="k">"servers"</span>: {
-    <span class="k">"</span><span class="u-name">youcam-beauty</span><span class="k">"</span>: {
-      <span class="k">"url"</span>: <span class="s">"</span><span class="u-url">https://mcp-api-01.makeupar.com/mcp/beauty</span><span class="s">"</span>,
-      <span class="k">"type"</span>: <span class="s">"http"</span>,
-      <span class="k">"headers"</span>: { <span class="k">"Authorization"</span>: <span class="s">"Bearer YOUR_API_KEY"</span> }
-    }
-  }
-<span class="p">}</span></pre></div>
+          </div>
+        </div>
+        <div class="client-note" id="claudeRequirement"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><span>Requires Node.js and npm</span></div>
+      </div>
+
+      <!-- CLI install -->
+      <div class="for-cli code-card rv">
+        <div class="code-body">
+          <div class="skill-command-list">
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">1</span><b>Install and verify the YouCam CLI</b></div>
+              <div class="skill-code-row"><pre><code><span class="s">npm install -g</span> youcam-cli</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="p">youcam</span> --help</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">2</span><b>Authenticate with your API key</b></div>
+              <div class="skill-code-row"><pre><code><span class="p">youcam</span> auth login <span class="s">YOUR_API_KEY</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
+            <div class="skill-command">
+              <div class="skill-command-head"><span class="skill-command-step">3</span><b>Create a task and check its status</b></div>
+              <div class="skill-code-row"><pre><code><span class="p">youcam</span> run face-reshape --src_file ./portrait.jpg --version 1.0 --features '{"face_width":-20}'</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="p">youcam</span> status face-reshape <span class="s">TASK_ID</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+            </div>
           </div>
         </div>
       </div>
@@ -459,7 +494,7 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
           <div class="skill-command-list">
             <div class="skill-command">
               <div class="skill-command-head"><span class="skill-command-step">1</span><b>Install the YouCam skill collection</b></div>
-              <div class="skill-code-row"><pre><code><span class="s">npx</span> skills add youcam</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="s">npx</span> skills add YouCam-API/skills</code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
             </div>
             <div class="skill-command">
               <div class="skill-command-head"><span class="skill-command-step">2</span><b>Set your API key</b></div>
@@ -467,8 +502,8 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
             </div>
             <div class="skill-command">
               <div class="skill-command-head"><span class="skill-command-step">3</span><b>Invoke a skill in chat</b></div>
-              <div class="skill-code-row"><pre><code><span class="p">/youcam:skin-analysis-expert</span> <span class="s">"analyze this selfie"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
-              <div class="skill-code-row"><pre><code><span class="p">/youcam:clothes-tryon</span> <span class="s">"try this dress on the model photo"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="p">/skin-analysis-expert</span> <span class="s">"analyze this selfie"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
+              <div class="skill-code-row"><pre><code><span class="p">/clothes-tryon-studio</span> <span class="s">"try this dress on the model photo"</span></code></pre><button class="skill-copy" data-copy-command>Copy</button></div>
             </div>
           </div>
         </div>
@@ -481,7 +516,7 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <section id="usecases">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2>One prompt in, a real result out</h2>
+      <h2>One Prompt In, a Real Result Out</h2>
     </div>
     <div class="demo-chips rv" id="demoChips"></div>
     <div class="demo rv">
@@ -500,12 +535,27 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <!-- WHY -->
 <section id="advantage" class="tint">
   <div class="wrap">
-    <div class="sec-head rv"><h2>YouCam AI capabilities, now available to your agent</h2><p>Build complete visual AI experiences with specialized APIs for analysis, virtual try-on, generation, and editing.</p></div>
+    <div class="sec-head rv"><h2>YouCam AI Capabilities, Now Available to Your Agent</h2><p>Build complete visual AI experiences with specialized APIs for analysis, virtual try-on, generation, and editing.</p></div>
     <div class="why">
       <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.2L18 20l-6-3.2L6 20l1.5-6.9L3 8.9 9 8z"/></svg></div><div><h3>Visual AI built for real use cases</h3><p class="desc">Specialized APIs for beauty, hair, fashion, jewelry, image creation, and video workflows.</p></div></div>
-      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><h3>From prompt to real output</h3><p class="desc">Return structured analysis, virtual try-on previews, generated images, and videos directly inside an agent workflow.</p></div></div>
-      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h6v6H4zM14 13h6v6h-6z"/><path d="M10 8h4a3 3 0 0 1 3 3v2M14 16h-4a3 3 0 0 1-3-3v-2"/></svg></div><div><h3>Compose multi-step visual workflows</h3><p class="desc">Combine analysis, generation, editing, and virtual try-on APIs to build complete visual experiences.</p></div></div>
-      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></div><div><h3>One key, existing billing</h3><p class="desc">Access YouCam capabilities with the same API key and existing API plan—no separate MCP or Agent Skill billing.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><h3>Activate directly in your favorite tools</h3><p class="desc">Use YouCam directly in Claude, Gemini CLI, Cursor, and other everyday tools.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h6v6H4zM14 13h6v6h-6z"/><path d="M10 8h4a3 3 0 0 1 3 3v2M14 16h-4a3 3 0 0 1-3-3v-2"/></svg></div><div><h3>From prompt to real output</h3><p class="desc">Return structured analysis, virtual try-on previews, generated images, and videos in your workflow.</p></div></div>
+      <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16v10H4z"/><path d="M8 7V5a4 4 0 0 1 8 0v2"/></svg></div><div><h3>Retain Manual Review Mechanisms</h3><p class="desc">Retain manual oversight for critical tasks to prevent errors from escalating.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY BUILD -->
+<section id="why-build" class="tint">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>Why Build with YouCam MCP, CLI &amp; Agent Skills?</h2><p>Choose how your workflow accesses visual AI—from connected agent tools and scriptable commands to ready-made, multi-step Skills.</p></div>
+    <div class="why">
+      <div class="card rv"><div><h3>Centralized Credential Control</h3><p class="desc">YouCam's developer platform centrally issues and tracks all API keys, making team configurations and long-term maintenance much simpler.</p></div></div>
+      <div class="card rv"><div><h3>MCP, CLI, and Ready-Made Skills</h3><p class="desc">Connect individual tools through MCP, automate API tasks with the CLI, or install Skills that select and call the required APIs automatically.</p></div></div>
+      <div class="card rv"><div><h3>Top-tier built-in security</h3><p class="desc">With OAuth directly linked to your YouCam account, you completely eliminate the risks of exposing or rotating API keys. Your video assets, account permissions, and credits remain entirely under your control.</p></div></div>
+      <div class="card rv"><div><h3>One API Key and Existing Billing</h3><p class="desc">Use the same YouCam API key and API plan across all three MCP servers, the YouCam CLI, and every Agent Skill.</p></div></div>
+      <div class="card rv"><div><h3>Actionable Troubleshooting Feedback</h3><p class="desc">Accelerate debugging with clear, structured error responses. Instantly know whether a failure stems from invalid parameters, lack of permissions, or exceeded limits, making retries and fixes effortless.</p></div></div>
+      <div class="card rv"><div><h3>Developer-Ready Setup</h3><p class="desc">Start with copyable MCP configurations, an npm-installed CLI, one-command Skill installation, API documentation, and an interactive API Playground.</p></div></div>
     </div>
   </div>
 </section>
@@ -513,7 +563,7 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <!-- RESULTS -->
 <section id="results" class="dark-sec">
   <div class="wrap">
-    <div class="sec-head rv"><h2>See what YouCam can create</h2><p>From structured analysis and virtual try-on to campaign images and videos—turn a prompt and source media into production-ready visual results.</p></div>
+    <div class="sec-head rv"><h2>See What YouCam Can Create</h2><p>From structured analysis and virtual try-on to campaign images and videos—turn prompts, commands, and source media into production-ready visual results.</p></div>
     <div class="res-grid">
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Skin Analysis image</span></div><p class="res-cap">Skin Analysis</p></div>
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Makeup Transfer image</span></div><p class="res-cap">Makeup Transfer</p></div>
@@ -521,9 +571,9 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m10 9 5 3-5 3z"/></svg><span>Video Generation image</span></div><p class="res-cap">Video Generation</p></div>
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Clothes VTO image</span></div><p class="res-cap">Clothes VTO</p></div>
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Hair VTO image</span></div><p class="res-cap">Hair VTO</p></div>
-      <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Fashion VTO image</span></div><p class="res-cap">Fashion VTO</p></div>
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Reshape image</span></div><p class="res-cap">Reshape</p></div>
       <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Image Edit image</span></div><p class="res-cap">Image Edit</p></div>
+      <div class="result-card rv"><div class="result-media"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M21 16l-5-5L5 20"/></svg><span>Jewelry Try-On image</span></div><p class="res-cap">Jewelry Try-On</p></div>
     </div>
   </div>
 </section>
@@ -533,11 +583,12 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
   <div class="wrap">
     <div class="sec-head rv"><h2>FAQ</h2></div>
     <div class="faq">
-      <div class="q"><button class="q-head">Do I need an API key?<span class="pm">+</span></button><div class="q-body"><p>Yes. The same YouCam API key works across all three MCP servers and every YouCam Agent Skill. Create a key in the YouCam API Console, then add it to your MCP configuration or set it as the <code>YOUCAM_API_KEY</code> environment variable.</p></div></div>
-      <div class="q"><button class="q-head">What's the difference between MCP and Agent Skill?<span class="pm">+</span></button><div class="q-body"><p>A YouCam MCP server gives your agent direct access to individual YouCam API tools grouped by domain. An Agent Skill is a ready-made workflow: it selects and calls the required YouCam APIs, then formats the result for the user. Agent Skills call the APIs directly and do not require an MCP server. Both use the same YouCam API key.</p></div></div>
-      <div class="q"><button class="q-head">Do Agent Skills require an MCP server?<span class="pm">+</span></button><div class="q-body"><p>No. YouCam Agent Skills call the YouCam APIs directly using your API key. You only need to install the skill collection and set the <code>YOUCAM_API_KEY</code> environment variable.</p></div></div>
-      <div class="q"><button class="q-head">Which agents &amp; clients are supported?<span class="pm">+</span></button><div class="q-body"><p>MCP servers work with clients that support remote HTTP MCP servers and custom authorization headers. Agent Skills are designed for skill-compatible LLM coding environments. See the setup documentation for the current compatibility list.</p></div></div>
-      <div class="q"><button class="q-head">How is it billed?<span class="pm">+</span></button><div class="q-body"><p>MCP and Agent Skill usage is billed through your existing YouCam API plan. There is no separate charge for the MCP or Skill layer; usage is counted according to the underlying YouCam API calls. Start on the free trial and scale up.</p></div></div>
+      <div class="q"><button class="q-head">Do I need an API key?<span class="pm">+</span></button><div class="q-body"><p>Yes. MCP servers, the YouCam CLI, and Agent Skills all authenticate with the same YouCam API key. Get one from the API Console and reuse it across every connection method.</p></div></div>
+      <div class="q"><button class="q-head">What's the difference between MCP, CLI, and Agent Skill?<span class="pm">+</span></button><div class="q-body"><p>MCP gives compatible agents live access to individual YouCam tools. The CLI exposes YouCam API endpoints as scriptable <code>youcam</code> commands for terminals, automation, and agent-built workflows. Agent Skills are installable, ready-made workflows that select and call the required APIs for a specific task.</p></div></div>
+      <div class="q"><button class="q-head">What do I need to use the YouCam CLI?<span class="pm">+</span></button><div class="q-body"><p>Install Node.js and npm, run <code>npm install -g youcam-cli</code>, then authenticate with <code>youcam auth login YOUR_API_KEY</code>. Use <code>youcam --help</code> to explore available commands.</p></div></div>
+      <div class="q"><button class="q-head">Do Agent Skills require an MCP server?<span class="pm">+</span></button><div class="q-body"><p>No. Agent Skills work standalone — set <code>YOUCAM_API_KEY</code> in your environment and install the skill your agent needs.</p></div></div>
+      <div class="q"><button class="q-head">Which agents &amp; clients are supported?<span class="pm">+</span></button><div class="q-body"><p>Use MCP with compatible clients such as Claude, Cursor, and GitHub Copilot. Use Agent Skills in platforms that support installable skills. The CLI can run in a terminal, script, CI workflow, or an agent environment that can execute commands.</p></div></div>
+      <div class="q"><button class="q-head">How is it billed?<span class="pm">+</span></button><div class="q-body"><p>API usage from MCP, CLI, and Agent Skills is billed through your existing YouCam API plan.</p></div></div>
     </div>
   </div>
 </section>
@@ -546,13 +597,13 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <section id="get-started">
   <div class="wrap">
     <div class="cta-final rv">
-      <h2>Connect YouCam to your agent today</h2>
+      <h2>Bring YouCam MCP, CLI &amp; Agent Skills into Your Workflow</h2>
       <p>Connect YouCam and make your first API call in minutes.</p>
       <div class="hero-btns" style="justify-content:center;margin:0">
-        <a href="#" class="btn btn-lg btn-white">Get started now →</a>
-        <a href="#" class="btn btn-lg btn-ghost">View documentation</a>
+        <a href="https://yce.perfectcorp.com/api-console/en/" class="btn btn-lg btn-white">Get started now →</a>
+        <a href="https://docs.perfectcorp.com/develop/introduction" class="btn btn-lg btn-ghost">View documentation</a>
       </div>
-      <p class="cta-note">One API key · Usage-based pricing · MCP and Agent Skill support</p>
+      <p class="cta-note">One API key · Usage-based pricing · MCP, CLI, and Agent Skill support</p>
     </div>
   </div>
 </section>
@@ -561,8 +612,8 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <footer>
   <div class="wrap foot-in">
     <a class="logo-svg" href="#" aria-label="YouCam API"><svg xmlns="http://www.w3.org/2000/svg" width="176" height="25" viewBox="0 0 176 25" fill="none"><path fill="#fff" d="M45.844 6.985c.855 0 1.526.66 1.526 1.498v8.505c0 3.916-3.26 7.101-7.137 7.101s-7.037-3.185-7.037-7.101V8.483c0-.84.659-1.498 1.498-1.498.84 0 1.498.659 1.498 1.498v8.505a4.073 4.073 0 0 0 4.054 4.11c2.298-.031 4.102-1.834 4.102-4.11V8.483c0-.813.687-1.497 1.495-1.498M.597.313C.894.063 1.334-.05 1.752.02c.4.065.748.293.964.629l6.787 9.18L16.35.607c.19-.297.543-.521.939-.586.409-.065.84.047 1.17.306.302.202.512.525.586.908.081.413-.017.848-.267 1.192L11.04 12.833v9.757a1.5 1.5 0 0 1-1.498 1.498 1.52 1.52 0 0 1-1.498-1.498v-9.696L.27 2.435C-.194 1.708-.044.765.597.313M61.845.012c2.75 0 5.465.925 7.647 2.604.353.292.568.71.59 1.154.021.383-.104.744-.349 1.01-.21.298-.55.505-.938.565a1.47 1.47 0 0 1-1.162-.306 9.33 9.33 0 0 0-5.785-2.005l.004.004c-5.13 0-9.3 4.14-9.3 9.077 0 4.936 4.17 8.952 9.3 8.952 2.16 0 4.188-.706 5.707-1.992l.057-.043a1.62 1.62 0 0 1 1.252-.245c.353.081.659.291.861.588.237.241.374.625.353 1.02-.026.453-.25.875-.603 1.133-2.143 1.648-4.855 2.56-7.63 2.56-6.797 0-12.328-5.22-12.328-11.973S54.937.047 61.844.012M96.99 7.048a7.1 7.1 0 0 1 5.582 2.729c1.364-1.712 3.432-2.727 5.596-2.729a7.08 7.08 0 0 1 7.067 7.072v8.504c0 .805-.693 1.463-1.498 1.463a1.464 1.464 0 0 1-1.463-1.463V14.12c-.056-2.303-1.864-4.11-4.11-4.11s-4.076 1.846-4.076 4.11v8.6c0 .042-.001.15-.07.357-.163.49-.567.731-.701.813a1.6 1.6 0 0 1-.758.197l-.227-.016a1.75 1.75 0 0 1-.822-.383l-.082-.087c-.344-.434-.366-.842-.362-1.002v-8.483c0-2.269-1.83-4.11-4.076-4.11-2.247 0-4.076 1.846-4.076 4.11v8.505c0 .494-.25.946-.667 1.209-.06.051-.19.138-.349.185-.146.069-.309.068-.386.068h-.25c-.577-.064-1.076-.494-1.27-1.07l-.04-.147V8.51c.001-.804.682-1.463 1.465-1.463s1.407.564 1.489 1.304a7.03 7.03 0 0 1 4.084-1.304"/><path fill="#fff" fill-rule="evenodd" d="M23.103 7.014c4.48 0 8.122 3.831 8.122 8.535s-3.641 8.534-8.122 8.534-8.12-3.83-8.12-8.534 3.644-8.535 8.12-8.535m0 2.961c-2.78 0-5.13 2.518-5.13 5.574s2.303 5.543 5.13 5.543 5.131-2.521 5.131-5.543c0-3.021-2.35-5.574-5.13-5.574M86.183 7.014c.84 0 1.498.659 1.498 1.498v14.074c0 .814-.684 1.497-1.498 1.497a1.52 1.52 0 0 1-1.498-1.497v-.452c-1.459 1.261-3.262 1.95-5.13 1.95-4.48 0-8.122-3.83-8.122-8.535 0-4.704 3.646-8.535 8.122-8.535 1.877 0 3.68.68 5.13 1.924v-.426c0-.84.66-1.498 1.498-1.498M79.56 9.975c-2.827 0-5.13 2.518-5.13 5.574s2.303 5.543 5.13 5.543 5.13-2.47 5.13-5.543-2.302-5.574-5.13-5.574"/><path fill="#3183FF" fill-rule="evenodd" d="M160.451.045a8.326 8.326 0 1 1 0 16.649h-5.946v5.448a1.903 1.903 0 0 1-3.806 0V2.9a2.855 2.855 0 0 1 2.855-2.854zm-5.946 12.843h5.946a4.52 4.52 0 1 0 0-9.038h-5.946z"/><path fill="#3183FF" d="M173.533.248c1.051 0 1.904.851 1.904 1.902v19.98a1.904 1.904 0 0 1-3.806 0V2.15c0-1.05.852-1.902 1.902-1.902"/><path fill="#3183FF" fill-rule="evenodd" d="M136.652.045c.729 0 1.395.417 1.712 1.074l6.196 12.812.011.024.002.005 3.32 7.168a1.904 1.904 0 0 1-3.454 1.598l-2.808-6.064h-9.959l-2.808 6.064a1.903 1.903 0 0 1-3.454-1.598l3.32-7.168.002-.005.009-.022.001-.002 6.196-12.812.009-.018.048-.09.007-.012a1.9 1.9 0 0 1 1.65-.954m-3.163 12.811h6.324l-3.161-6.538z"/></svg></a>
-    <div class="foot-links"><a href="#">Products</a><a href="#">Pricing</a><a href="#">Documentation</a><a href="#">Playground</a><a href="#hero">MCP / Skill</a><a href="#">Contact Us</a></div>
-    <span>© 2026 Perfect Corp · YouCam API</span>
+    <div class="foot-links"><a href="#">Products</a><a href="#">Pricing</a><a href="#">Documentation</a><a href="#">Playground</a><a href="#hero">MCP/CLI/Skill</a><a href="#">Contact Us</a></div>
+    <span>2026 © Perfect Corp. All Rights Reserved.</span>
   </div>
 </footer>
 
@@ -572,13 +623,18 @@ const burger=document.getElementById('burger'),links=document.getElementById('na
 burger.addEventListener('click',()=>links.classList.toggle('open'));
 links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
 
-// MASTER SWITCH: MCP <-> Agent Skill drives capabilities + install
-document.querySelectorAll('#masterSeg button').forEach(b=>b.addEventListener('click',()=>{
+// MASTER SWITCH: MCP / CLI / Agent Skill drives capabilities + install + demo
+function setProductMode(mode){
   document.querySelectorAll('#masterSeg button').forEach(x=>x.classList.remove('active'));
+  const b=document.querySelector('#masterSeg button[data-mode="'+mode+'"]');
+  if(!b)return;
   b.classList.add('active');
-  document.body.classList.toggle('mode-skill', b.dataset.mode==='skill');
-  buildDemo(b.dataset.mode);
-}));
+  document.body.classList.remove('mode-cli','mode-skill');
+  if(mode==='cli')document.body.classList.add('mode-cli');
+  if(mode==='skill')document.body.classList.add('mode-skill');
+  buildDemo(mode);
+}
+document.querySelectorAll('#masterSeg button').forEach(b=>b.addEventListener('click',()=>setProductMode(b.dataset.mode)));
 
 // switch-bar collapses to tabs-only once it sticks under the nav
 const switchBar=document.getElementById('switchBar');
@@ -634,7 +690,7 @@ document.querySelectorAll('.q-head').forEach(h=>h.addEventListener('click',()=>{
   if(!open){q.classList.add('open');body.style.maxHeight=body.scrollHeight+'px'}
 }));
 
-// USE-CASE dialog demo — richer conversation, follows the MCP / Agent Skill switch
+// USE-CASE demo — follows the MCP / CLI / Agent Skill switch
 const SCENES={
   mcp:[
     {chip:"Beauty brand",you:"Create a personalized lipstick preview for this shopper using our soft coral shade.",uploads:[{name:"shopper-selfie.jpg",kind:"portrait"},{name:"soft-coral.png",kind:"product"}],intro:"I’ll prepare a customer-facing virtual try-on while preserving the shopper’s identity and the product shade.",thought:"Validate the shopper photo and shade reference, then route the request to the beauty MCP’s makeup try-on tool.",toolName:"AI Makeup Try-On",toolDetail:"youcam-beauty · use case: beauty consultation · shade: soft coral",answer:"<p>The personalized lipstick preview is ready for the beauty consultation flow.</p><ul><li>Product shade matched to the supplied reference</li><li>Application limited to the lips</li><li>Original skin tone, facial features, and lighting preserved</li></ul><p>The output can now be returned inside the brand’s shopping assistant or consultation experience.</p>",shot:"Beauty consultation · lipstick preview"},
@@ -643,6 +699,12 @@ const SCENES={
     {chip:"Jewelry retail",you:"Place this watch on the shopper’s wrist for an online product preview.",uploads:[{name:"wrist-photo.jpg",kind:"wrist"},{name:"watch-product.png",kind:"product"}],intro:"I’ll create an on-wrist product visualization with the scale and perspective matched to the shopper photo.",thought:"Detect the wrist position, estimate perspective, and submit the shopper and product images to the fashion MCP.",toolName:"AI Watch Try-On",toolDetail:"youcam-fashion · use case: jewelry retail · match: scale + angle",answer:"<p>The on-wrist preview has been generated for the retail experience.</p><ul><li>Watch face and product design preserved</li><li>Band aligned to the detected wrist</li><li>Perspective and lighting matched to the source photo</li></ul><p>The result is ready to embed in a conversational shopping or product-detail flow.</p>",shot:"Jewelry retail · on-wrist preview"},
     {chip:"Brand marketing",you:"Create three campaign directions from this product packshot.",uploads:[{name:"hero-product.png",kind:"product"}],intro:"I’ll turn the approved packshot into a consistent set of campaign concepts without losing the product identity.",thought:"Use the product as a high-strength reference, define a shared art direction, and request three marketing compositions.",toolName:"AI Image Generator",toolDetail:"youcam-creators · use case: brand campaign · outputs: 3",answer:"<p>Three campaign directions are ready for the marketing team.</p><ul><li>Clean studio hero for web and commerce</li><li>Lifestyle editorial composition for campaign pages</li><li>Close-up social crop for paid media</li></ul><p>Each direction keeps the supplied product visually consistent across the set.</p>",shot:"Brand marketing · campaign concept"},
     {chip:"Creative agency",you:"Turn this approved key visual into a five-second social promo.",uploads:[{name:"approved-key-visual.jpg",kind:"product"}],intro:"I’ll add controlled motion to the approved visual and prepare a short-form asset suitable for a client campaign.",thought:"Inspect the approved composition, choose subtle camera movement, and call the creators MCP for a five-second clip.",toolName:"AI Video Generator",toolDetail:"youcam-creators · use case: agency production · duration: 5s",answer:"<p>The five-second social promo is ready for agency review.</p><ul><li>Approved subject and composition preserved</li><li>Subtle push-in and lighting motion added</li><li>Duration optimized for short-form placement</li></ul><p>The resulting clip can move directly into the team’s review and delivery workflow.</p>",shot:"Creative agency · social promo"}
+  ],
+  cli:[
+    {chip:"AI Face Reshape",you:"Make my face slightly slimmer while keeping the result natural.",uploads:[{name:"portrait.jpg",kind:"portrait"}],intro:"I’ll make a subtle adjustment to the face width while preserving the subject’s identity and natural proportions.",thought:"Interpret the requested intensity, map it to supported reshape parameters, and run AI Face Reshape through the YouCam CLI.",toolName:"YouCam CLI · AI Face Reshape",toolDetail:"face reshape · natural adjustment · identity preserved",answer:"<p>The refined portrait is ready.</p><ul><li>Face width adjusted subtly</li><li>Facial identity and expression preserved</li><li>Original lighting and background retained</li></ul><p>The result is shown on the right.</p>",shot:"AI Face Reshape result"},
+    {chip:"AI Nail Transfer",you:"Apply this chrome nail design to my hand photo.",uploads:[{name:"hand.jpg",kind:"wrist"},{name:"nail-design.jpg",kind:"product"}],intro:"I’ll transfer the chrome design to the visible nails while matching the hand’s position, lighting, and perspective.",thought:"Validate the hand and reference images, assign their roles, and run AI Nail Transfer through the YouCam CLI.",toolName:"YouCam CLI · AI Nail Transfer",toolDetail:"nail transfer · reference design · perspective matched",answer:"<p>The chrome nail preview is ready.</p><ul><li>Reference finish and pattern transferred</li><li>Nail placement matched to the hand photo</li><li>Skin tone and surrounding image preserved</li></ul><p>You can review the completed design on the right.</p>",shot:"AI Nail Transfer result"},
+    {chip:"AI Necklace Virtual Try-On",you:"Show how this necklace looks on the portrait I uploaded.",uploads:[{name:"portrait.jpg",kind:"portrait"},{name:"necklace.png",kind:"product"}],intro:"I’ll place the necklace onto the portrait and adapt its scale and position to the subject.",thought:"Validate the portrait and product reference, estimate the neckline, and run Necklace Virtual Try-On through the YouCam CLI.",toolName:"YouCam CLI · Necklace Virtual Try-On",toolDetail:"necklace try-on · scale and position matched",answer:"<p>The necklace try-on preview is ready.</p><ul><li>Product design preserved</li><li>Placement aligned to the visible neckline</li><li>Scale and lighting adapted to the portrait</li></ul><p>The finished preview is available on the right.</p>",shot:"AI Necklace Virtual Try-On result"},
+    {chip:"AI Photo Background Change",you:"Replace this photo background with a clean marble studio and soft daylight.",uploads:[{name:"product-photo.jpg",kind:"product"}],intro:"I’ll preserve the product and replace only the background with the requested marble studio setting.",thought:"Separate the main subject, translate the visual direction into a background prompt, and run Photo Background Change through the YouCam CLI.",toolName:"YouCam CLI · Photo Background Change",toolDetail:"background change · marble studio · soft daylight",answer:"<p>The updated product image is ready.</p><ul><li>Main subject preserved</li><li>Background replaced with a clean marble studio</li><li>Soft daylight matched across the composition</li></ul><p>The completed image is shown on the right.</p>",shot:"AI Photo Background Change result"}
   ],
   skill:[
     {chip:"Skin Analysis Expert",you:"Analyze my skin and summarize the main visible concerns.",uploads:[{name:"my-selfie.jpg",kind:"portrait"}],intro:"I’ll run the Skin Analysis Expert workflow and turn the API scores into a readable cosmetic skin report.",thought:"Validate the selfie, request the supported concern scores, then organize the strongest visible signals into a concise summary.",toolName:"Skin Analysis Expert",toolDetail:"youcam skill · AI Skin Analysis · formatted report",answer:"<p>Your report highlights texture, pores, and dark circles as the most visible focus areas in this image.</p><ul><li>Texture appears moderately uneven</li><li>Pores are most visible around the T-zone</li><li>Dark circles are visible beneath both eyes</li></ul><p>This is a cosmetic image assessment, not a medical diagnosis. The full report and visual map are ready on the right.</p>",shot:"Cosmetic skin report"},
