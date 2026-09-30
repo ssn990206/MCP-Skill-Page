@@ -716,9 +716,8 @@ const SCENES={
   ]
 };
 
-// Keep the same six visual-AI tasks across MCP, CLI, and Agent Skills so visitors
-// can compare the connection method without also having to decode new examples.
-const DEMO_TASKS=[
+// CLI-specific examples; MCP and Agent Skills retain their original scenarios above.
+const CLI_DEMO_TASKS=[
   {chip:"Skin Analysis",you:"Analyze this selfie and summarize the main visible skin concerns.",uploads:[{name:"selfie.jpg",kind:"portrait"}],intro:"I’ll check that the face is clearly visible, analyze the supported cosmetic skin concerns, and organize the results into a concise summary.",thought:"Validate image quality, analyze visible cosmetic concerns, and prepare a structured report.",tool:"AI Skin Analysis",answer:"<p>The selfie is suitable for cosmetic skin analysis. The most visible focus areas are texture, pores, and dark circles.</p><ul><li>Texture appears moderately uneven</li><li>Pores are most visible around the T-zone</li><li>Dark circles are visible beneath both eyes</li></ul><p>This is a cosmetic image assessment, not a medical diagnosis. The visual report is ready on the right.</p>",shot:"Cosmetic skin analysis report"},
   {chip:"Clothes Try-On",you:"Show how this jacket looks on the model in the photo.",uploads:[{name:"model.jpg",kind:"portrait"},{name:"jacket.png",kind:"garment"}],intro:"I’ll apply the jacket to the model while preserving the garment design, the model’s identity, and the original pose.",thought:"Validate the model and garment images, assign their roles, and generate a clothing try-on preview.",tool:"AI Clothes Try-On",answer:"<p>The clothing try-on preview is ready.</p><ul><li>Jacket color and design preserved</li><li>Fit adapted to the model’s pose</li><li>Model identity and background retained</li></ul><p>The completed preview is shown on the right.</p>",shot:"Clothes try-on preview"},
   {chip:"Remove Background",you:"Remove the background from this product photo and keep the edges clean.",uploads:[{name:"product-photo.jpg",kind:"product"}],intro:"I’ll isolate the product from its surroundings and return a clean transparent-background asset.",thought:"Detect the main product, refine its boundary, and remove the original background.",tool:"AI Background Removal",answer:"<p>The background has been removed.</p><ul><li>Main product preserved</li><li>Outer edges refined</li><li>Transparent background prepared for reuse</li></ul><p>The cutout is ready on the right.</p>",shot:"Transparent product cutout"},
@@ -726,18 +725,15 @@ const DEMO_TASKS=[
   {chip:"Makeup VTO",you:"Preview this soft coral makeup look on my photo.",uploads:[{name:"portrait.jpg",kind:"portrait"},{name:"makeup-reference.jpg",kind:"product"}],intro:"I’ll apply the soft coral look while preserving the subject’s facial features, skin tone, and lighting.",thought:"Validate the portrait and look reference, map the makeup regions, and generate a virtual try-on preview.",tool:"AI Makeup Virtual Try-On",answer:"<p>The makeup virtual try-on is ready.</p><ul><li>Soft coral tones applied to the selected regions</li><li>Facial features and skin tone preserved</li><li>Original lighting retained</li></ul><p>The completed look is shown on the right.</p>",shot:"Soft coral makeup preview"},
   {chip:"Hair Color",you:"Show me how I look with a warm chestnut hair color.",uploads:[{name:"hair-photo.jpg",kind:"portrait"}],intro:"I’ll recolor the visible hair to warm chestnut while preserving its texture, highlights, and the rest of the portrait.",thought:"Detect the visible hair region, apply the requested shade, and blend it with the source lighting.",tool:"AI Hair Color",answer:"<p>The warm chestnut hair-color preview is ready.</p><ul><li>Requested shade applied consistently</li><li>Hair texture and highlights preserved</li><li>Face, clothing, and background unchanged</li></ul><p>The finished color preview is available on the right.</p>",shot:"Warm chestnut hair-color preview"}
 ];
-function demoScenesFor(mode){
-  const labels={mcp:"MCP",cli:"YouCam CLI",skill:"Agent Skill"};
-  return DEMO_TASKS.map(task=>({
+function cliDemoScenes(){
+  return CLI_DEMO_TASKS.map(task=>({
     ...task,
-    toolName:labels[mode]+" · "+task.tool,
-    toolDetail:labels[mode]+" · "+task.tool,
-    thought:task.thought+({mcp:" Call the matching MCP tool.",cli:" Run the matching YouCam CLI capability.",skill:" Complete the task through the installed Agent Skill."}[mode])
+    toolName:"YouCam CLI · "+task.tool,
+    toolDetail:"YouCam CLI · "+task.tool,
+    thought:task.thought+" Run the matching YouCam CLI capability."
   }));
 }
-SCENES.mcp=demoScenesFor("mcp");
-SCENES.cli=demoScenesFor("cli");
-SCENES.skill=demoScenesFor("skill");
+SCENES.cli=cliDemoScenes();
 const chatBody=document.getElementById('chatBody'),chatScroll=document.getElementById('chatScroll'),gallery=document.getElementById('rgallery'),demoChips=document.getElementById('demoChips'),resultPanel=document.getElementById('resultPanel');
 const CLIENTS=[
   {name:"Claude Desktop",icon:"https://cdn.simpleicons.org/claude/D97757",fallback:"CL"},
