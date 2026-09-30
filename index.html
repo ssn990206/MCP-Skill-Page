@@ -357,9 +357,9 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <section id="capabilities">
   <div class="wrap">
     <div class="sec-head rv">
-      <h2 class="for-mcp">YouCam MCP: Direct Visual AI Tools for Agents</h2>
-      <h2 class="for-cli">YouCam CLI: Composable Commands for Every Workflow</h2>
-      <h2 class="for-skill">YouCam Agent Skills: Complete Workflows, Ready to Install</h2>
+      <h2 class="for-mcp">MCP: Direct Visual AI Tools for Agents</h2>
+      <h2 class="for-cli">CLI: Composable Commands for Every Workflow</h2>
+      <h2 class="for-skill">Agent Skills: Complete Workflows, Ready to Install</h2>
       <p class="for-mcp">Three domain MCP servers expose individual YouCam API tools directly to compatible agents. Connect the domains you need—or all three—with one API key.</p>
       <p class="for-cli">One CLI maps YouCam API features to predictable commands for task creation, status checks, templates, and costs—ready for developers, scripts, and command-running agents.</p>
       <p class="for-skill">Ready-made Agent Skills package API selection, sequencing, and result formatting into reusable workflows. Install a complete job instead of assembling each API call yourself.</p>
@@ -535,7 +535,7 @@ footer{background:#0b1220;color:#9aa7bd;padding:44px 0 30px;font-size:14px}
 <!-- WHY -->
 <section id="advantage" class="tint">
   <div class="wrap">
-    <div class="sec-head rv"><h2>YouCam AI Capabilities, Now Available to Your Agent</h2><p>Build complete visual AI experiences with specialized APIs for analysis, virtual try-on, generation, and editing.</p></div>
+    <div class="sec-head rv"><h2>YouCam API Capabilities, Now Available to Your Agent</h2><p>Build complete visual AI experiences with specialized APIs for analysis, virtual try-on, generation, and editing.</p></div>
     <div class="why">
       <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 6 .9-4.5 4.2L18 20l-6-3.2L6 20l1.5-6.9L3 8.9 9 8z"/></svg></div><div><h3>Visual AI built for real use cases</h3><p class="desc">Specialized APIs for beauty, hair, fashion, jewelry, image creation, and video workflows.</p></div></div>
       <div class="card rv"><div class="cap-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg></div><div><h3>Activate directly in your favorite tools</h3><p class="desc">Use YouCam directly in Claude, Gemini CLI, Cursor, and other everyday tools.</p></div></div>
@@ -715,6 +715,29 @@ const SCENES={
     {chip:"Clothes Try-on Studio",you:"Try this outfit with a runway walk.",uploads:[{name:"model.jpg",kind:"portrait"},{name:"outfit.png",kind:"garment"}],intro:"I’ll apply the outfit to the model first, then use the completed try-on as the reference for a short runway motion.",thought:"Validate both images, generate the clothing try-on, and pass the approved frame into the video workflow.",toolName:"Clothes Try-on Studio",toolDetail:"youcam skill · Clothes + Background + Video",answer:"<p>I completed the outfit try-on and used the result to generate a five-second runway-style clip.</p><ul><li>Garment details preserved</li><li>Model identity retained</li><li>Motion: forward walk with a subtle turn</li></ul><p>The finished runway preview is ready on the right.</p>",shot:"▶ Runway try-on video"}
   ]
 };
+
+// Keep the same six visual-AI tasks across MCP, CLI, and Agent Skills so visitors
+// can compare the connection method without also having to decode new examples.
+const DEMO_TASKS=[
+  {chip:"Skin Analysis",you:"Analyze this selfie and summarize the main visible skin concerns.",uploads:[{name:"selfie.jpg",kind:"portrait"}],intro:"I’ll check that the face is clearly visible, analyze the supported cosmetic skin concerns, and organize the results into a concise summary.",thought:"Validate image quality, analyze visible cosmetic concerns, and prepare a structured report.",tool:"AI Skin Analysis",answer:"<p>The selfie is suitable for cosmetic skin analysis. The most visible focus areas are texture, pores, and dark circles.</p><ul><li>Texture appears moderately uneven</li><li>Pores are most visible around the T-zone</li><li>Dark circles are visible beneath both eyes</li></ul><p>This is a cosmetic image assessment, not a medical diagnosis. The visual report is ready on the right.</p>",shot:"Cosmetic skin analysis report"},
+  {chip:"Clothes Try-On",you:"Show how this jacket looks on the model in the photo.",uploads:[{name:"model.jpg",kind:"portrait"},{name:"jacket.png",kind:"garment"}],intro:"I’ll apply the jacket to the model while preserving the garment design, the model’s identity, and the original pose.",thought:"Validate the model and garment images, assign their roles, and generate a clothing try-on preview.",tool:"AI Clothes Try-On",answer:"<p>The clothing try-on preview is ready.</p><ul><li>Jacket color and design preserved</li><li>Fit adapted to the model’s pose</li><li>Model identity and background retained</li></ul><p>The completed preview is shown on the right.</p>",shot:"Clothes try-on preview"},
+  {chip:"Remove Background",you:"Remove the background from this product photo and keep the edges clean.",uploads:[{name:"product-photo.jpg",kind:"product"}],intro:"I’ll isolate the product from its surroundings and return a clean transparent-background asset.",thought:"Detect the main product, refine its boundary, and remove the original background.",tool:"AI Background Removal",answer:"<p>The background has been removed.</p><ul><li>Main product preserved</li><li>Outer edges refined</li><li>Transparent background prepared for reuse</li></ul><p>The cutout is ready on the right.</p>",shot:"Transparent product cutout"},
+  {chip:"Hair Transfer",you:"Apply the hairstyle from this reference photo to my portrait.",uploads:[{name:"portrait.jpg",kind:"portrait"},{name:"hair-reference.jpg",kind:"portrait"}],intro:"I’ll transfer the reference hairstyle while preserving the subject’s face, expression, and overall identity.",thought:"Validate both portraits, identify the reference hairstyle, and transfer its shape to the source portrait.",tool:"AI Hairstyle Transfer",answer:"<p>The hairstyle transfer is complete.</p><ul><li>Reference shape and length applied</li><li>Facial identity and expression preserved</li><li>Original background retained</li></ul><p>The generated hairstyle preview is ready on the right.</p>",shot:"Hairstyle transfer preview"},
+  {chip:"Makeup VTO",you:"Preview this soft coral makeup look on my photo.",uploads:[{name:"portrait.jpg",kind:"portrait"},{name:"makeup-reference.jpg",kind:"product"}],intro:"I’ll apply the soft coral look while preserving the subject’s facial features, skin tone, and lighting.",thought:"Validate the portrait and look reference, map the makeup regions, and generate a virtual try-on preview.",tool:"AI Makeup Virtual Try-On",answer:"<p>The makeup virtual try-on is ready.</p><ul><li>Soft coral tones applied to the selected regions</li><li>Facial features and skin tone preserved</li><li>Original lighting retained</li></ul><p>The completed look is shown on the right.</p>",shot:"Soft coral makeup preview"},
+  {chip:"Hair Color",you:"Show me how I look with a warm chestnut hair color.",uploads:[{name:"hair-photo.jpg",kind:"portrait"}],intro:"I’ll recolor the visible hair to warm chestnut while preserving its texture, highlights, and the rest of the portrait.",thought:"Detect the visible hair region, apply the requested shade, and blend it with the source lighting.",tool:"AI Hair Color",answer:"<p>The warm chestnut hair-color preview is ready.</p><ul><li>Requested shade applied consistently</li><li>Hair texture and highlights preserved</li><li>Face, clothing, and background unchanged</li></ul><p>The finished color preview is available on the right.</p>",shot:"Warm chestnut hair-color preview"}
+];
+function demoScenesFor(mode){
+  const labels={mcp:"MCP",cli:"YouCam CLI",skill:"Agent Skill"};
+  return DEMO_TASKS.map(task=>({
+    ...task,
+    toolName:labels[mode]+" · "+task.tool,
+    toolDetail:labels[mode]+" · "+task.tool,
+    thought:task.thought+({mcp:" Call the matching MCP tool.",cli:" Run the matching YouCam CLI capability.",skill:" Complete the task through the installed Agent Skill."}[mode])
+  }));
+}
+SCENES.mcp=demoScenesFor("mcp");
+SCENES.cli=demoScenesFor("cli");
+SCENES.skill=demoScenesFor("skill");
 const chatBody=document.getElementById('chatBody'),chatScroll=document.getElementById('chatScroll'),gallery=document.getElementById('rgallery'),demoChips=document.getElementById('demoChips'),resultPanel=document.getElementById('resultPanel');
 const CLIENTS=[
   {name:"Claude Desktop",icon:"https://cdn.simpleicons.org/claude/D97757",fallback:"CL"},
